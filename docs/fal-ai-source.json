@@ -1,0 +1,19 @@
+{
+  "sourceProject": "ai-pi",
+  "sourceDirectory": "resources/local-skills/fal-ai",
+  "sourceCommit": "52f1ec1ab3a8e3032359158df247765daa02d739",
+  "lastSkillCommit": "b17912891a43ad699f52d2a4d38e883ce6d7393b",
+  "description": "Initial byte-identical import; source remains unchanged. Hashes describe the import baseline, not future release signatures.",
+  "files": {
+    "SKILL.md": "f3ac7e981384ae1a77256e0ed69f942ad68055b7054ee6236689b89da639b231",
+    "references/images.md": "3a9faf45a359f78e63728b074e70c2b8e7c799d11c6a69866ad32bc3878ad8f2",
+    "references/background.md": "0dda30374f20032cc8dbe2b2e0e5fbbd6e587680a75216e66fd23623c2efac52",
+    "references/structure.md": "730ee7dc35a133a830bdb2bbbcba8b7b8581b225beaa58be2d0eec962ed554a2",
+    "references/jobs.md": "7a78a353c01efe2e84b31f21695cf46c56321995cda34fc39c07f26a7e3a78d5",
+    "references/consultation.md": "41477980727e178105725425dbae0269ced14ada22093a5d29e2e14b911d06ea",
+    "scripts/fal.mjs": "4d89d52dd7991b78eed14c918e0c15215f6435bb92b36c18a287307af968d6c3",
+    "scripts/models.mjs": "fe0741b6ce53dd93dc49deb2d061f0083f51cb36a3113a7714510afee84d752b",
+    "scripts/errors.mjs": "0ca0599cbb9ab0cc2a8a849a88339119a50c4b18bb59706ebdf44bc7cdaa9b3f",
+    "tests/fal.test.mjs": "585e068a77fba3c6fd3d67fce612fc674d8d26ac32b33dfba7ac39e879391bb3"
+  }
+}

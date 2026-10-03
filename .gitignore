@@ -1,0 +1,29 @@
+# Credentials and local configuration
+.env
+.env.*
+*.env
+*.pem
+*.key
+.npmrc
+.workspace.env
+
+# Dependencies and generated files
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+coverage/
+artifacts/
+dist/
+output/
+fal-output/
+*.log
+
+# Private task inputs and responses (do not run real jobs inside this repo)
+request.json
+status.json
+result.json
+downloads.json
+cancel.json
+*.part
+*.tmp

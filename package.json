@@ -1,0 +1,13 @@
+{
+  "name": "dsaco-agent-skills",
+  "private": true,
+  "description": "Portable agent skills maintained by dsaco.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test tests/repository.test.mjs skills/fal-ai/tests/fal.test.mjs"
+  }
+}
