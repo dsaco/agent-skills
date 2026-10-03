@@ -2,7 +2,7 @@
 
 可独立分发的 Agent Skills，由 dsaco 维护。仓库地址：[dsaco/agent-skills](https://github.com/dsaco/agent-skills)。不是 fal.ai、DeepSeek 或 Pi 官方项目。
 
-本仓库按 GitHub 源码目录分发 Skill，不要求单独的 Skill 版本号、Release 或 ZIP。ai-pi 与 Dong 的 GitHub 下载接入正在本地开发；客户端发布状态与本仓库源码分发是两件事。
+本仓库按 GitHub 源码目录分发 Skill，不要求单独的 Skill 版本号、Release 或 ZIP。ai-pi 与 Dong 的 GitHub 下载接入已完成本地开发和隔离验收，但尚未发布客户端版本；源码可下载不等于现有安装版已经接入。
 
 ## 当前 Skill
 
@@ -41,7 +41,7 @@ git clone https://github.com/dsaco/agent-skills.git
 
 也可自行放入 `~/.agents/skills/fal-ai/`，再明确开启 ai-pi 的「使用系统技能」。同名来源优先级可能使旧副本胜出，按应用显示的实际来源核对，不自动覆盖用户目录。
 
-这两条是已有的本地安装方式；应用内“官方技能”仍指向旧来源，本轮未接入 GitHub 目录或自动更新。
+这两条是已有的本地安装方式；现有已发布应用的“官方技能”仍指向旧来源；新的本地开发版已接入本仓库，等待客户端另行发布。更新需用户明确操作，不自动替换。
 
 ## 运行与验证
 
