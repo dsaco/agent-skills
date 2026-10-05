@@ -126,3 +126,21 @@ test('百炼独立分发白名单、许可、元数据、本地引用与宿主�
     }
   }
 });
+
+test('七牛独立文件、许可、SDK声明、四变量文档与引用', async () => {
+  const dir = path.join(root, 'skills/qiniu');
+  const allowed = ['LICENSE','README.md','SKILL.md','package.json','references/upload.md','scripts/upload.js','tests/upload.test.cjs'].sort();
+  assert.deepEqual(await files(dir), allowed);
+  assert.equal(await readFile(path.join(dir,'LICENSE'),'utf8'),await readFile(path.join(root,'LICENSE'),'utf8'));
+  const manifest=JSON.parse(await readFile(path.join(dir,'package.json'),'utf8'));
+  assert.equal(manifest.type,'commonjs');assert.equal(manifest.private,true);assert.deepEqual(manifest.dependencies,{qiniu:'7.15.2'});
+  const skillText=await readFile(path.join(dir,'SKILL.md'),'utf8');assert.match(skillText,/^---\nname: qiniu\ndescription: .+\ncompatibility: .+\n---/);
+  for(const variable of ['QINIU_ACCESS_KEY','QINIU_SECRET_KEY','QINIU_BUCKET','QINIU_DOMAIN']) assert(skillText.includes(variable));
+  for(const rel of allowed.filter(x=>x.endsWith('.md'))){
+    const source=await readFile(path.join(dir,rel),'utf8');assert(!/\/Users\/[^\s/]+\//.test(source));
+    for(const [,href] of source.matchAll(/\]\(([^)]+)\)/g)){
+      if(/^(https?:|#)/.test(href))continue;
+      const target=path.resolve(path.dirname(path.join(dir,rel)),href.split('#')[0]);assert(target.startsWith(dir+path.sep));assert((await lstat(target)).isFile());
+    }
+  }
+});

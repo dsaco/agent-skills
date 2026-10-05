@@ -8,6 +8,6 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "node --test tests/repository.test.mjs skills/fal-ai/tests/fal.test.mjs skills/volcengine-ark-media/tests/ark-media.test.cjs skills/dashscope-tts/tests/tts.test.mjs"
+    "test": "node --test tests/repository.test.mjs skills/fal-ai/tests/fal.test.mjs skills/volcengine-ark-media/tests/ark-media.test.cjs skills/dashscope-tts/tests/tts.test.mjs skills/qiniu/tests/upload.test.cjs"
   }
 }

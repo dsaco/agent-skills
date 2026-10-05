@@ -10,11 +10,25 @@ dsaco 个人维护的 Agent Skills 集合。仓库地址：[dsaco/agent-skills](
 
 | Skill | 能力 | 要求 |
 | --- | --- | --- |
+| [qiniu](skills/qiniu/SKILL.md) | 本地文件上传七牛云、对象命名与访问 URL | Node.js 22+；官方 qiniu SDK；四项环境变量见下表 |
 | [dashscope-tts](skills/dashscope-tts/SKILL.md) | 阿里云百炼语音合成：CosyVoice／Qwen-Audio-TTS、Qwen-TTS 非流式合成与音频补下载 | Node.js 22+；合成需要 `DASHSCOPE_API_KEY`；无 npm 依赖 |
 | [volcengine-ark-media](skills/volcengine-ark-media/SKILL.md) | Seedream 文生图、参考图编辑与组图；Seedance 2.0／2.5 视频创建、查询与下载；已有图片响应补下载 | Node.js 22+；生成及视频查询需要环境变量 `ARK_API_KEY`；无 npm 依赖 |
 | [fal-ai](skills/fal-ai/SKILL.md) | 文生图、参考图编辑、去背景、深度图、人体姿态图；任务状态、取回、补下载、取消；公开模型咨询 | Node.js 22+；实际 API 操作需要环境变量 `FAL_KEY`；无 npm 依赖 |
 
-各技能的能力边界、参数和使用说明见对应目录的 `SKILL.md` 与 `README.md`。当前三个技能均无 npm 运行依赖；这不是未来所有技能的统一要求。
+各技能的能力边界、参数和使用说明见对应目录的 `SKILL.md` 与 `README.md`。fal-ai、Ark、百炼无 npm 运行依赖；qiniu 的真实上传需安装官方 SDK，按其 README 操作，技能不会自动安装。
+
+### 七牛环境变量
+
+七牛真实上传要求以下 **四项全部齐全**，没有内置空间或域名：
+
+| 变量 | 用途 |
+| --- | --- |
+| `QINIU_ACCESS_KEY` | 七牛 Access Key |
+| `QINIU_SECRET_KEY` | 七牛 Secret Key |
+| `QINIU_BUCKET` | 目标存储空间 |
+| `QINIU_DOMAIN` | 该空间绑定的 HTTPS 访问域名，例如 `https://cdn.example.com` |
+
+通过本地运行环境注入；不在聊天中发送明文密钥。七牛 dry-run 仅需 Bucket 和域名，不读取 AK／SK。配置、依赖与命令详见 [qiniu README](skills/qiniu/README.md)。
 
 验证范围与已知限制见 [docs/status.md](docs/status.md)。
 
@@ -84,6 +98,9 @@ npx skills add dsaco/agent-skills --skill volcengine-ark-media
 # 安装百炼语音技能
 npx skills add dsaco/agent-skills --skill dashscope-tts
 
+# 安装七牛上传技能
+npx skills add dsaco/agent-skills --skill qiniu
+
 # 用户级安装，跨项目使用：添加 -g
 npx skills add dsaco/agent-skills --skill fal-ai -g
 ```
@@ -100,6 +117,7 @@ npx skills add dsaco/agent-skills --skill fal-ai --skill volcengine-ark-media --
 npx skills add "<本地仓库路径>/skills/fal-ai"
 npx skills add "<本地仓库路径>/skills/volcengine-ark-media"
 npx skills add "<本地仓库路径>/skills/dashscope-tts"
+npx skills add "<本地仓库路径>/skills/qiniu"
 ```
 
 将 `<本地仓库路径>` 替换为实际路径。默认安装范围是当前项目；`-g` 改为用户级，`--agent <名称>` 可指定 CLI 支持的 Agent，`--copy` 使用复制而非符号链接。默认保留交互确认，安装前核对目标目录及同名技能，避免覆盖已有副本。具体安装目录和加载方式由所选 Agent 决定；未被 CLI 支持的工具可按下方方式手动安装。
@@ -139,17 +157,18 @@ node skills/volcengine-ark-media/scripts/ark-media.js --help
 node skills/volcengine-ark-media/scripts/ark-media.js image --prompt "陶瓷茶壶" --dry-run
 node skills/dashscope-tts/scripts/tts.mjs --help
 node skills/dashscope-tts/scripts/tts.mjs models
+node skills/qiniu/scripts/upload.js --help
 ```
 
 `--dry-run` 不读取 Key、不联网、不写生成文件。真实任务从用户的工作目录运行，使用脚本绝对路径，以免把私人素材或任务记录写入源码仓库。fal-ai 默认输出为该工作目录的 `output/<任务>-<随机标识>/`；Ark 默认输出为 `output/seedream/<name>/` 或 `output/seedance/<name>/`，每次新生成应使用唯一名称。百炼使用必填的 `--out-dir` 指定一个尚不存在的任务目录。
 
-fal-ai 读取 `FAL_KEY`，Ark 读取 `ARK_API_KEY`，百炼读取 `DASHSCOPE_API_KEY`；三个自维护技能均不自动加载 `.env`。若凭据在项目根 `.env` 中，可由本地启动流程仅注入所需变量；不要让模型读取、打印或上传文件内容。实际模型调用和素材上传可能产生费用，安装 Skill 不等于授权调用。
+fal-ai 读取 `FAL_KEY`，Ark 读取 `ARK_API_KEY`，百炼读取 `DASHSCOPE_API_KEY`；七牛读取上表的四项变量；自维护技能均不自动加载 `.env`。若凭据在项目根 `.env` 中，可由本地启动流程仅注入所需变量；不要让模型读取、打印或上传文件内容。实际模型调用和素材上传可能产生费用，安装 Skill 不等于授权调用。
 
 ## 维护与发布边界
 
-- 能力入口：[fal-ai](skills/fal-ai/SKILL.md)、[volcengine-ark-media](skills/volcengine-ark-media/SKILL.md)、[dashscope-tts](skills/dashscope-tts/SKILL.md)；模型参数按需查阅各入口链接的 references。
+- 能力入口：[fal-ai](skills/fal-ai/SKILL.md)、[volcengine-ark-media](skills/volcengine-ark-media/SKILL.md)、[dashscope-tts](skills/dashscope-tts/SKILL.md)、[qiniu](skills/qiniu/SKILL.md)；模型参数按需查阅各入口链接的 references。
 - 流程规范与静态走查：[Skill 流程审查](docs/skill-process-review.md)；不等同于模型行为实测。
-- 来源对比与验证：[fal-ai](docs/fal-ai.md)、[volcengine-ark-media](docs/volcengine-ark-media.md)、[dashscope-tts](docs/dashscope-tts.md)；验证范围：[docs/status.md](docs/status.md)。
+- 来源对比与验证：[fal-ai](docs/fal-ai.md)、[volcengine-ark-media](docs/volcengine-ark-media.md)、[dashscope-tts](docs/dashscope-tts.md)、[qiniu](docs/qiniu.md)；验证范围：[docs/status.md](docs/status.md)。
 - 分发单位为完整 Skill 目录，通过 GitHub 源码和第三方安装工具获取；约定见[目录分发说明](docs/distribution.md)。不维护应用客户端、专用下载器或独立市场。
 - 仓库与独立 Skill 均提供 MIT LICENSE；许可不授予第三方服务账户、API 配额或素材权利。
 - 不提交凭据、任务记录、生成素材或依赖目录；发布前再次检查精确文件白名单。

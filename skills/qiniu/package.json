@@ -1,0 +1,9 @@
+{
+  "name": "qiniu-skill",
+  "private": true,
+  "type": "commonjs",
+  "license": "MIT",
+  "engines": { "node": ">=22" },
+  "scripts": { "test": "node --test tests/upload.test.cjs" },
+  "dependencies": { "qiniu": "7.15.2" }
+}

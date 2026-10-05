@@ -1,0 +1,18 @@
+{
+  "source": "本地已安装 qiniu；未提供独立版本或 Git 提交",
+  "purpose": "源文件摘要，仅用于溯源，不是签名",
+  "files": [
+    {
+      "path": "SKILL.md",
+      "sha256": "5b157713bd2399d96a071eaab742a5347fac30915b3764380fc073de69db50e7"
+    },
+    {
+      "path": "scripts/upload.js",
+      "sha256": "4852c56d446449ad471785c36649ad664726513119075be9568805a67efe7608"
+    },
+    {
+      "path": "package.json",
+      "sha256": "0520e819ce61ca2313922fd8ccfaa35a9d37a8c719947cc3fe98bdd84b16444a"
+    }
+  ]
+}
