@@ -13,12 +13,12 @@ compatibility: Node.js 22+；生成和视频查询需要环境变量 ARK_API_KEY
 | 需求 | 必读文档 | 执行路径与结束条件 |
 | --- | --- | --- |
 | 图片生成、编辑、组图 | [图片参数](references/seedream-image.md)及[任务规则](references/jobs.md) | `image` → 下方新生成流程 |
-| 视频生成、图生视频、多模态参考 | [视频参数](references/seedance-2.0.md)及[任务规则](references/jobs.md) | `video-create` → 下方新生成流程 |
+| 视频生成、图生视频、多模态参考 | 按模型读 [2.0 参数](references/seedance-2.0.md)或 [2.5 参数](references/seedance-2.5.md)，并读[任务规则](references/jobs.md) | `video-create` → 下方新生成流程 |
 | 已有视频进度、成品或补下载 | [视频取回](references/jobs.md#视频取回) | 复用 task id 执行 `video-query`；只查进度则查询一次后报告，取成品则按轮询预算处理并验收 |
 | 已有图片响应补下载 | [图片恢复](references/jobs.md#图片恢复) | `image-download --result <响应文件>`；逐项下载后验收，不进入新生成流程 |
 | 列出本地图片模型 | 无 | `models`；报告清单及“本地快照，非账户可用性查询”后结束，无需 Key 或预检 |
 
-原样传递用户 prompt。用户明确要求优化视频 prompt 时，才读取[提示词指南](references/prompt-guide.md)。模型能力和价格是导入快照，动态结论以当前官方资料和账户权限为准。
+原样传递用户 prompt。用户明确要求优化视频 prompt 时，才读取[提示词指南](references/prompt-guide.md)。视频默认 2.0，指定 2.5 时使用 `--model seedance-2.5`。模型能力与价格以当前官方资料和账户权限为准，本地定义不是账户可用性保证。
 
 ## 新生成流程
 

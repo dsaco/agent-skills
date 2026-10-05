@@ -24,7 +24,7 @@
 ## 模型
 
 - 默认模型：`doubao-seedance-2-0-260128`
-- 当前 skill 只支持 Seedance 2.0。
+- 本页只定义 2.0；选择 2.5 时读取[2.5 参数](seedance-2.5.md)，不沿用本页数量／时长限制。
 
 ## 创建任务请求体
 
@@ -81,7 +81,7 @@
 
 当前不支持或刻意不接入的字段：
 
-- `draft`：仅 Seedance 1.5 pro 支持。
+- `draft`：本 Skill 未接样片工作流；2.5 的边界见其专页。
 - `frames`：Seedance 2.0 系列暂不支持。
 - `camera_fixed`：Seedance 2.0 系列暂不支持。
 - `service_tier`：Seedance 2.0 系列仅支持在线推理模式，不支持配置该参数。

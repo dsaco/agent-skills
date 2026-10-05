@@ -183,3 +183,58 @@ test('图片恢复逐项错误不阻断后续，拒绝空/非法媒体和非 HTT
   assert.notEqual(w.run(['image-download', '--result', 'empty.json', '--out-dir', 'empty']).status, 0);
   assert(!fs.existsSync(path.join(w.cwd, 'empty')));
 });
+
+test('Seedance 2.5 ID/别名、30秒与纯音频；2.0 默认及边界不变', t => {
+  const w = workspace(t);
+  for (const model of ['seedance-2.5', 'seedance-2-5', 'doubao-seedance-2-5', 'doubao-seedance-2-5-260628']) {
+    const r = w.run(['video-create', '--model', model, '--audio', 'https://media.invalid/a.mp3', '--duration', '30', '--resolution', '1080p', '--dry-run']); ok(r);
+    const p = JSON.parse(r.stdout).payload; assert.equal(p.model, 'doubao-seedance-2-5-260628'); assert.equal(p.duration, 30);
+    assert.equal(p.content[0].role, 'reference_audio'); assert.equal(p.output_format, undefined); assert.equal(p.omni_reference_task_type, undefined);
+  }
+  const old = w.run(['video-create', '--prompt', 'unchanged', '--dry-run']); ok(old);
+  assert.equal(JSON.parse(old.stdout).payload.model, 'doubao-seedance-2-0-260128');
+  for (const args of [['--duration','16'], ['--output-format','mov'], ['--omni-reference-task-type','edit'], ['--audio','https://media.invalid/a.mp3']]) {
+    assert.notEqual(w.run(['video-create', '--prompt', 'x', ...args, '--dry-run']).status, 0);
+  }
+  for (const duration of ['3','31','4.5']) assert.notEqual(w.run(['video-create','--model','seedance-2.5','--prompt','x','--duration',duration,'--dry-run']).status,0);
+  assert.deepEqual(fs.readdirSync(w.cwd), []);
+});
+
+test('Seedance 2.5 的 50 素材上限与各类型边界', t => {
+  const w = workspace(t), args = ['video-create','--model','seedance-2.5','--omni-reference-task-type','reference'];
+  for (let i=0;i<30;i++) args.push('--image',`https://media.invalid/${i}.png`,'--image-role','reference_image');
+  for (let i=0;i<10;i++) args.push('--video',`https://media.invalid/${i}.mp4`,'--audio',`https://media.invalid/${i}.mp3`);
+  const r = w.run([...args,'--dry-run']); ok(r); assert.equal(JSON.parse(r.stdout).payload.content.length,50);
+  for (const extra of [['--image','https://media.invalid/more.png','--image-role','reference_image'],['--video','https://media.invalid/more.mp4'],['--audio','https://media.invalid/more.mp3']]) assert.notEqual(w.run([...args,...extra,'--dry-run']).status,0);
+});
+
+test('Seedance 2.5 编辑/延长/首尾帧约束与 payload 映射，拒绝模型参数串用', t => {
+  const w = workspace(t), base = ['video-create','--model','seedance-2.5','--prompt','保持原文'];
+  const r = w.run([...base,'--video','asset://example','--omni-reference-task-type','edit','--ratio','adaptive','--duration','-1','--output-format','mov','--dry-run']); ok(r);
+  const p = JSON.parse(r.stdout).payload; assert.equal(p.omni_reference_task_type,'edit'); assert.equal(p.output_format,'mov'); assert.equal(p.content[0].text,'保持原文');
+  ok(w.run([...base,'--video','asset://example','--omni-reference-task-type','extend','--duration','30','--dry-run']));
+  ok(w.run([...base,'--image','asset://first','--image-role','first_frame','--image','asset://last','--image-role','last_frame','--dry-run']));
+  for (const extra of [
+    ['--omni-reference-task-type','edit'], ['--video','asset://v','--omni-reference-task-type','edit','--duration','8'],
+    ['--video','asset://v','--omni-reference-task-type','extend','--ratio','16:9'], ['--output-format','avi'],
+    ['--image','asset://i','--ratio','16:9'], ['--image','asset://i','--image-role','last_frame'],
+    ['--image','asset://i','--image-role','first_frame','--audio','asset://a'], ['--draft'],
+  ]) assert.notEqual(w.run([...base,...extra,'--dry-run']).status,0);
+  assert.notEqual(w.run([...base,'--model','ep-unknown','--output-format','mov','--dry-run']).status,0);
+});
+
+test('Seedance 2.5 创建留据和 MOV 查询下载，未知价格不套2.0，拒绝错误后缀', t => {
+  const w = workspace(t);
+  ok(w.run(['video-create','--model','seedance-2.5','--prompt','x','--duration','30','--output-format','mov'], {id:'cgt-25'}));
+  assert.equal(JSON.parse(w.calls()[0].body).model,'doubao-seedance-2-5-260628');
+  const result = { id:'cgt-25', model:'doubao-seedance-2-5-260628', status:'succeeded', error:null, resolution:'1080p', usage:{completion_tokens:1000000}, content:{video_url:'https://media.invalid/movie.mov?signature=mock'} };
+  ok(w.run(['video-query','--id','cgt-25'], result));
+  const dir = path.join(w.cwd,'output/seedance/cgt-25');
+  assert(fs.existsSync(path.join(dir,'cgt-25.mov'))); assert(!fs.existsSync(path.join(dir,'cgt-25.mp4')));
+  const price = JSON.parse(fs.readFileSync(path.join(dir,'cgt-25.price.json'))); assert.equal(price.estimatedPrice,null); assert.equal(price.pricePerMillionTokens,null);
+  const count=w.calls().length;
+  assert.notEqual(w.run(['video-query','--id','cgt-25','--out','wrong.mp4'], result).status,0);
+  assert.equal(w.calls().length,count+1); // Query only, no media request on format mismatch.
+  ok(w.run(['video-query','--id','cgt-25-opaque','--output-format','mov'], {...result,content:{video_url:'https://media.invalid/opaque'}}));
+  assert(fs.existsSync(path.join(w.cwd,'output/seedance/cgt-25-opaque/cgt-25-opaque.mov')));
+});

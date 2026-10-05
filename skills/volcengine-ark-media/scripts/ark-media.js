@@ -22,9 +22,9 @@ function printHelp(stream = process.stdout) {
   stream.write(`Actions:\n`);
   stream.write(`  image         Generate or edit Seedream images synchronously and download results.\n`);
   stream.write(`  image-download Download images from a saved response, without generation or API key.\n`);
-  stream.write(`  video-create  Create an asynchronous Seedance 2.0 video task.\n`);
-  stream.write(`  video-query   Query a Seedance 2.0 task and download completed output.\n`);
-  stream.write(`  models        List supported Seedream image models. Video currently supports Seedance 2.0 only.\n\n`);
+  stream.write(`  video-create  Create an asynchronous Seedance 2.0/2.5 video task.\n`);
+  stream.write(`  video-query   Query a Seedance task and download completed output.\n`);
+  stream.write(`  models        List supported Seedream image models. Video supports Seedance 2.0 and 2.5.\n\n`);
   stream.write(`Pass --help after an action to see that action's options.\n`);
 }
 

@@ -7,6 +7,8 @@ const { validateName, fetchWithTimeout, redact, writeJson, writeMedia, submitOnc
 
 const DEFAULT_BASE_URL = 'https://ark.cn-beijing.volces.com/api/v3';
 const DEFAULT_MODEL = 'doubao-seedance-2-0-260128';
+const SEEDANCE_25 = 'doubao-seedance-2-5-260628';
+const SEEDANCE_25_ALIASES = new Set(['seedance-2.5', 'seedance-2-5', 'doubao-seedance-2-5']);
 const DEFAULT_OUTPUT_DIR = 'output/seedance';
 const IMAGE_ROLES = new Set(['first_frame', 'last_frame', 'reference_image']);
 const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.bmp', '.tiff', '.gif', '.heic', '.heif']);
@@ -26,7 +28,7 @@ function printHelp() {
   process.stdout.write(`Options:\n`);
   process.stdout.write(`  --prompt <text>               Text prompt. Required unless media is provided.\n`);
   process.stdout.write(`  --prompt-file <path>          Read text prompt from a UTF-8 file.\n`);
-  process.stdout.write(`  --model <id>                  Model ID. Default: ${DEFAULT_MODEL}\n`);
+  process.stdout.write(`  --model <id>                  Model ID or seedance-2.5 alias. Default: ${DEFAULT_MODEL}\n`);
   process.stdout.write(`  --name <name>                 Output bundle name. Default: create-video.\n`);
   process.stdout.write(`  --dir <path>                  Output root directory. Default: ${DEFAULT_OUTPUT_DIR}\n`);
   process.stdout.write(`  --image <path-or-url>         Image URL, asset:// ID, data URI, or local image. Repeatable.\n`);
@@ -43,7 +45,9 @@ function printHelp() {
   process.stdout.write(`  --execution-expires-after <s> Timeout seconds, 3600-259200.\n`);
   process.stdout.write(`  --resolution <value>          480p, 720p, or 1080p.\n`);
   process.stdout.write(`  --ratio <value>               16:9, 4:3, 1:1, 3:4, 9:16, 21:9, adaptive.\n`);
-  process.stdout.write(`  --duration <seconds>          Seedance 2.0: 4-15 or -1.\n`);
+  process.stdout.write(`  --duration <seconds>          2.0: 4-15; 2.5: 4-30; or -1.\n`);
+  process.stdout.write(`  --omni-reference-task-type <value> Seedance 2.5: auto, reference, edit, extend.\n`);
+  process.stdout.write(`  --output-format <value>       Seedance 2.5: mp4 or mov.\n`);
   process.stdout.write(`  --seed <integer>              -1 to 4294967295.\n`);
   process.stdout.write(`  --watermark                   Pass watermark: true.\n`);
   process.stdout.write(`  --json-out <path>             Raw JSON output path. Default: <dir>/<name>/create.json\n`);
@@ -62,7 +66,7 @@ function parseArgs(argv) {
     images: [], videos: [], audios: [], callbackUrl: '',
     returnLastFrame: false, generateAudio: undefined, webSearch: false, safetyIdentifier: '',
     priority: '', executionExpiresAfter: '', resolution: '', ratio: '', duration: '', seed: '',
-    watermark: false, jsonOut: '', dryRun: false,
+    watermark: false, jsonOut: '', dryRun: false, omniReferenceTaskType: '', outputFormat: '',
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -95,6 +99,8 @@ function parseArgs(argv) {
     else if (arg === '--ratio') args.ratio = next;
     else if (arg === '--duration') args.duration = next;
     else if (arg === '--seed') args.seed = next;
+    else if (arg === '--omni-reference-task-type') args.omniReferenceTaskType = next;
+    else if (arg === '--output-format') args.outputFormat = next;
     else if (arg === '--json-out') args.jsonOut = next;
     else die(`Unknown argument: ${arg}`, 2);
 
@@ -122,17 +128,21 @@ function baseUrl() {
 function validateArgs(args) {
   if (args.prompt && args.promptFile) die('--prompt and --prompt-file cannot be used together.', 2);
   if (args.promptFile) args.prompt = readPromptFile(args.promptFile);
-  if (!args.prompt.trim() && args.images.length === 0 && args.videos.length === 0) {
+  args.model = args.model.trim();
+  if (SEEDANCE_25_ALIASES.has(args.model.toLowerCase())) args.model = SEEDANCE_25;
+  const is25 = args.model === SEEDANCE_25;
+  if (!args.prompt.trim() && args.images.length === 0 && args.videos.length === 0 && !(is25 && args.audios.length)) {
     die('--prompt is required unless image or video input is provided.', 2);
   }
   if (!args.model.trim()) die('--model is required.', 2);
   if (!args.name.trim()) die('--name cannot be empty.', 2);
   validateName(args.name);
   if (!args.dir.trim()) die('--dir cannot be empty.', 2);
-  if (args.images.length > 9) die('Seedance 2.0 supports at most 9 images.', 2);
-  if (args.videos.length > 3) die('Seedance 2.0 supports at most 3 reference videos.', 2);
-  if (args.audios.length > 3) die('Seedance 2.0 supports at most 3 reference audios.', 2);
-  if (args.audios.length > 0 && args.images.length === 0 && args.videos.length === 0) {
+  const limits = is25 ? { images: 30, videos: 10, audios: 10 } : { images: 9, videos: 3, audios: 3 };
+  for (const [kind, limit] of Object.entries(limits)) {
+    if (args[kind].length > limit) die(`${is25 ? 'Seedance 2.5' : 'Seedance 2.0 profile'} supports at most ${limit} ${kind}.`, 2);
+  }
+  if (!is25 && args.audios.length > 0 && args.images.length === 0 && args.videos.length === 0) {
     die('Audio cannot be used alone. Provide at least one image or video.', 2);
   }
   args.images.forEach((image) => {
@@ -141,7 +151,8 @@ function validateArgs(args) {
   args.videos.forEach(validateRemoteMedia);
   validateEnum(args.resolution, RESOLUTIONS, '--resolution');
   validateEnum(args.ratio, RATIOS, '--ratio');
-  validateDuration(args.duration);
+  validateDuration(args.duration, is25 ? 30 : 15);
+  validateSeedance25(args, is25);
   validateIntegerRange(args.seed, '--seed', -1, 4_294_967_295);
   validateIntegerRange(args.priority, '--priority', 0, 9);
   validateIntegerRange(args.executionExpiresAfter, '--execution-expires-after', 3600, 259200);
@@ -166,11 +177,38 @@ function validateEnum(value, allowed, optionName) {
   if (!allowed.has(value)) die(`${optionName} must be one of: ${Array.from(allowed).join(', ')}.`, 2);
 }
 
-function validateDuration(value) {
+function validateDuration(value, max) {
   if (!value) return;
   if (!/^-?\d+$/.test(value)) die('--duration must be an integer.', 2);
   const numberValue = Number(value);
-  if (numberValue !== -1 && (numberValue < 4 || numberValue > 15)) die('--duration must be -1 or an integer from 4 to 15.', 2);
+  if (numberValue !== -1 && (numberValue < 4 || numberValue > max)) die(`--duration must be -1 or an integer from 4 to ${max}.`, 2);
+}
+
+function validateSeedance25(args, is25) {
+  if (!is25) {
+    if (args.omniReferenceTaskType || args.outputFormat) die('--omni-reference-task-type and --output-format require the supported Seedance 2.5 model.', 2);
+    return;
+  }
+  validateEnum(args.omniReferenceTaskType, new Set(['auto', 'reference', 'edit', 'extend']), '--omni-reference-task-type');
+  validateEnum(args.outputFormat, new Set(['mp4', 'mov']), '--output-format');
+  // A single unlabelled image uses first-frame semantics; ambiguous multi-image input is rejected.
+  const unlabelled = args.images.filter(image => !image.role);
+  if (unlabelled.length && (args.images.length !== 1 || args.videos.length || args.audios.length || args.omniReferenceTaskType)) {
+    die('Seedance 2.5 multimodal images require explicit --image-role reference_image; frame inputs require first_frame/last_frame.', 2);
+  }
+  const first = args.images.filter(image => image.role === 'first_frame' || !image.role).length;
+  const last = args.images.filter(image => image.role === 'last_frame').length;
+  const references = args.images.filter(image => image.role === 'reference_image').length + args.videos.length + args.audios.length;
+  if (first || last) {
+    if (first !== 1 || last > 1 || references || args.omniReferenceTaskType) die('Frame generation requires one first frame, at most one last frame, and no reference media/task type.', 2);
+    if (args.ratio && args.ratio !== 'adaptive') die('Seedance 2.5 frame generation requires --ratio adaptive or omission.', 2);
+  }
+  if (args.omniReferenceTaskType && !references) die('--omni-reference-task-type requires reference media.', 2);
+  if (['edit', 'extend'].includes(args.omniReferenceTaskType)) {
+    if (!args.videos.length) die('Seedance 2.5 edit/extend requires at least one --video.', 2);
+    if (args.ratio && args.ratio !== 'adaptive') die('Seedance 2.5 edit/extend requires --ratio adaptive or omission.', 2);
+    if (args.omniReferenceTaskType === 'edit' && args.duration && args.duration !== '-1') die('Seedance 2.5 edit requires --duration -1 or omission.', 2);
+  }
 }
 
 function validateIntegerRange(value, optionName, min, max) {
@@ -200,6 +238,8 @@ function createPayload(args) {
   if (args.duration) payload.duration = Number(args.duration);
   if (args.seed) payload.seed = Number(args.seed);
   if (args.watermark) payload.watermark = true;
+  if (args.omniReferenceTaskType) payload.omni_reference_task_type = args.omniReferenceTaskType;
+  if (args.outputFormat) payload.output_format = args.outputFormat;
   return payload;
 }
 

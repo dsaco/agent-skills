@@ -32,6 +32,7 @@ function printHelp() {
   process.stdout.write(`  --name <name>        Output bundle name. Default: task ID.\n`);
   process.stdout.write(`  --dir <path>         Output root directory. Default: ${DEFAULT_OUTPUT_DIR}\n`);
   process.stdout.write(`  --out <path>         Override output video path and infer bundle directory from it.\n`);
+  process.stdout.write(`  --output-format <mp4|mov> Explicit expected format; otherwise infer from result metadata/URL.\n`);
   process.stdout.write(`  --last-frame-out <path> Download content.last_frame_url when present.\n`);
   process.stdout.write(`  --json-out <path>    Raw JSON output path. Default: <dir>/<name>/<name>.json\n`);
   process.stdout.write(`  --price-out <path>   Price JSON path. Default: <out-dir>/<out-name>/<out-name>.price.json\n`);
@@ -51,6 +52,7 @@ function parseArgs(argv) {
     name: '',
     dir: DEFAULT_OUTPUT_DIR,
     out: '',
+    outputFormat: '',
     lastFrameOut: '',
     jsonOut: '',
     priceOut: '',
@@ -75,6 +77,7 @@ function parseArgs(argv) {
     else if (arg === '--name') args.name = next;
     else if (arg === '--dir') args.dir = next;
     else if (arg === '--out') args.out = next;
+    else if (arg === '--output-format') args.outputFormat = next;
     else if (arg === '--last-frame-out') args.lastFrameOut = next;
     else if (arg === '--json-out') args.jsonOut = next;
     else if (arg === '--price-out') args.priceOut = next;
@@ -98,6 +101,7 @@ function baseUrl() {
 function validateArgs(args) {
   if (!args.id.trim()) die('--id is required.', 2);
   if (!args.dir.trim()) die('--dir cannot be empty.', 2);
+  if (args.outputFormat && !['mp4', 'mov'].includes(args.outputFormat)) die('--output-format must be mp4 or mov.', 2);
   validateName(args.name || args.id, args.name ? '--name' : '--id');
 }
 
@@ -143,6 +147,19 @@ async function maybeDownload(result, args) {
   }
 }
 
+function resolveOutputFormat(result, args) {
+  let format = ['mp4', 'mov'].includes(result.output_format) ? result.output_format : '';
+  if (!format && result.content?.video_url) {
+    const ext = path.extname(new URL(result.content.video_url).pathname).toLowerCase();
+    if (['.mp4', '.mov'].includes(ext)) format = ext.slice(1);
+  }
+  if (format && args.outputFormat && format !== args.outputFormat) die('Requested download format disagrees with response; no transcoding is performed.');
+  const explicitExt = args.out ? path.extname(args.out).toLowerCase() : '';
+  if (explicitExt && !['.mp4', '.mov'].includes(explicitExt)) die('--out must use .mp4 or .mov.');
+  if (explicitExt && (format || args.outputFormat) && explicitExt !== `.${format || args.outputFormat}`) die('--out extension disagrees with video format; no transcoding is performed.');
+  args.outputFormat = format || args.outputFormat || explicitExt.slice(1) || 'mp4';
+}
+
 function modelPriceKey(model) {
   if (typeof model !== 'string') return '';
   if (model.includes('doubao-seedance-2-0-fast') || model.includes('doubao-seedance-2.0-fast')) {
@@ -166,14 +183,14 @@ function outputBundle(args) {
     return {
       dir: path.join(args.dir, name),
       name,
-      ext: '.mp4',
+      ext: `.${args.outputFormat || 'mp4'}`,
     };
   }
   const parsed = path.parse(args.out);
   return {
     dir: path.join(parsed.dir, parsed.name),
     name: parsed.name,
-    ext: parsed.ext || '.mp4',
+    ext: parsed.ext || `.${args.outputFormat || 'mp4'}`,
   };
 }
 
@@ -224,7 +241,7 @@ function calculatePrice(result, args) {
     pricePerMillionTokens: unitPrice,
     estimatedPrice: amount === null ? null : Number(amount.toFixed(6)),
     formula: 'estimatedPrice = completion_tokens / 1000000 * pricePerMillionTokens',
-    note: '使用导入时的静态价格表，未核验当前价格，不是账单；输入视频档位由用户指定。实际费用以官方账单为准。',
+    note: priceKey ? '使用导入时的静态价格表，未核验当前价格，不是账单；输入视频档位由用户指定。实际费用以官方账单为准。' : '该模型未配置价格（包括 Seedance 2.5）；估价为 null，不套用其他模型费率。实际费用以官方账单为准。',
   };
 }
 
@@ -253,6 +270,7 @@ async function main() {
   if (result?.status !== 'succeeded' || result.error != null) {
     die(`Task is ${result?.status || 'unknown'}: ${JSON.stringify(result?.error || null)}`);
   }
+  resolveOutputFormat(result, args);
   await maybeDownload(result, args);
   maybeWritePrice(result, args);
 }

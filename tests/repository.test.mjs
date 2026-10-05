@@ -84,7 +84,7 @@ test('Ark 独立分发白名单、CommonJS 边界、许可与相对引用', asyn
   const ark = path.join(root, 'skills/volcengine-ark-media');
   const allowed = [
     'LICENSE', 'README.md', 'SKILL.md', 'package.json',
-    'references/jobs.md', 'references/prompt-guide.md', 'references/seedance-2.0.md', 'references/seedream-image.md',
+    'references/jobs.md', 'references/prompt-guide.md', 'references/seedance-2.0.md', 'references/seedance-2.5.md', 'references/seedream-image.md',
     'scripts/ark-media.js', 'scripts/create-video.js', 'scripts/generate-image.js', 'scripts/download-images.js',
     'scripts/query-video.js', 'scripts/runtime.js', 'tests/ark-media.test.cjs',
   ].sort();

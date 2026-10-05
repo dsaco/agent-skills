@@ -15,10 +15,10 @@
 | --- | --- |
 | `image` | `output/seedream/<name>/<name>.json` 和图片；默认名称 `generate-image` |
 | `video-create` | `output/seedance/<name>/create.json`；默认名称 `create-video` |
-| `video-query` | `output/seedance/<name>/<name>.json`、`.mp4`、可选 `.last-frame.png` 和 `.price.json`；默认名称为 task id |
+| `video-query` | `output/seedance/<name>/<name>.json`、`.mp4`／`.mov`、可选 `.last-frame.png` 和 `.price.json`；默认名称为 task id |
 | `image-download` | 必填 `--out-dir` 指定新恢复目录；`image-1.jpeg`／`.png` 等，扩展名按字节签名识别；其他格式失败 |
 
-生成／查询的 `--dir` 改输出根目录，`--json-out` 改响应路径。图片 `--out` 为首张图路径；视频 `--out movies/demo.mp4` 实际写入 `movies/demo/demo.mp4`，同目录保存其他产物。视频 `--last-frame-out`、`--price-out` 分别指定尾帧和估价文件。估价含义见[价格计算](seedance-2.0.md#价格计算)。
+生成／查询的 `--dir` 改输出根目录，`--json-out` 改响应路径。图片 `--out` 为首张图路径；视频 `--out movies/demo.mp4` 实际写入 `movies/demo/demo.mp4`，同目录保存其他产物。视频格式按响应字段／URL 后缀识别，缺少依据时默认 mp4，可用 `--output-format mov` 明确；与 `--out` 后缀冲突时拒绝下载，不隐式转码。视频 `--last-frame-out`、`--price-out` 分别指定尾帧和估价文件。2.0 估价含义见[价格计算](seedance-2.0.md#价格计算)；2.5 单价与估价为 null。
 
 每个新生成任务使用唯一 `--name` 或 `--json-out`。付费 POST 前写 `<响应路径>.submission.json`；已有响应或标记时拒绝提交。标记含义：
 

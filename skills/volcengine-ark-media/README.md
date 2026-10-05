@@ -20,12 +20,12 @@ node "<技能目录>/scripts/ark-media.js" models
 | 需求 | 动作与文档 |
 | --- | --- |
 | 图片生成、参考图编辑、组图 | `image`；[图片参数](references/seedream-image.md) |
-| 视频创建 | `video-create`；[视频参数](references/seedance-2.0.md) |
+| 视频创建 | `video-create`；[Seedance 2.0](references/seedance-2.0.md)／[Seedance 2.5](references/seedance-2.5.md) |
 | 已有视频进度、成品或补下载 | `video-query`；[视频取回](references/jobs.md#视频取回) |
 | 已有图片响应补下载 | `image-download`；[图片恢复](references/jobs.md#图片恢复) |
 | 离线图片模型清单 | `models`，不查询账户权限 |
 
-各动作参数用 `<动作> --help` 查看。模型及价格是导入快照，未重新核实或进行真实 API 验收。
+各动作参数用 `<动作> --help` 查看。视频默认 2.0；显式 `--model seedance-2.5` 使用 2.5。支持 30 秒、多模态参考、编辑／延长及 MOV；Draft 工作流未接入。2.5 参数有官方文档依据，但未进行真实 API 验收；本地估价不覆盖 2.5。
 
 ## 维护与许可
 
