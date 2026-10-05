@@ -1,0 +1,225 @@
+{
+  "source": "本地自维护 ai-image-production 的安全文本源；本次知识整理，不导入旧 Git 历史或运行能力",
+  "sourceCommit": "cc8571b64941acc6f0e5b90dc7e15a3bc8bc4b02",
+  "sourceLastChangeCommit": "f3319ab103ae0c9f3540293673f1703f820054c6",
+  "reviewDate": "2026-10-05",
+  "scope": "仅 docs 差异资料；共用内容引用已有游戏素材文档，不注册 Skill、不迁入脚本、风格媒体、个人偏好、依赖或任务记录",
+  "files": [
+    {
+      "path": "skills/ai-image-production/SKILL.md",
+      "sha256": "162c02f194c9a985b5094303debcd940c78a85b91e3957c39e77a5fa4b296056",
+      "treatment": "主题摘要整理；删除任务特定内容，区分源码、历史观察和建议"
+    },
+    {
+      "path": "skills/ai-image-production/evals/evals.json",
+      "sha256": "d13c5338d7d9c55bdbcc253bdcd6f9f399fe6a039a95fc563366761d3b99d3ca",
+      "treatment": "静态核对测试范围与预期冲突，未复制或运行测试"
+    },
+    {
+      "path": "skills/ai-image-production/package.json",
+      "sha256": "af71ddbed476f8c1f36178f7331049fb22551ffaf56be66acfffb9f1654c26e1",
+      "treatment": "静态核对依赖与测试入口，未安装或复制运行配置"
+    },
+    {
+      "path": "skills/ai-image-production/references/element-extraction.md",
+      "sha256": "f5c69a6c054c4dfae0ae4837787640e9fd291a66975efb7d8ad73b756c184e88",
+      "treatment": "主题摘要整理；删除任务特定内容，区分源码、历史观察和建议"
+    },
+    {
+      "path": "skills/ai-image-production/references/generation-results.md",
+      "sha256": "6d6b49fc82fb146ad7359ccc0e495d9877bb58f5f541b3bacc0f5d4429ab61a7",
+      "treatment": "主题摘要整理；删除任务特定内容，区分源码、历史观察和建议"
+    },
+    {
+      "path": "skills/ai-image-production/references/grid-assets.md",
+      "sha256": "fed534cb489060e86f2470b95388839c036efed7b59229c4a916621642db18a6",
+      "treatment": "主题摘要整理；删除任务特定内容，区分源码、历史观察和建议"
+    },
+    {
+      "path": "skills/ai-image-production/references/grid-generation.md",
+      "sha256": "0a4ad840f63f91214b69ec2d17ea261502cbed136a09b4d0291b376fe8f75c78",
+      "treatment": "主题摘要整理；删除任务特定内容，区分源码、历史观察和建议"
+    },
+    {
+      "path": "skills/ai-image-production/references/image-quality-repair.md",
+      "sha256": "edc4e1e668d6a8a7b0d53376f8e34310f07b39391ddb002a5bfe1ae835807d04",
+      "treatment": "主题摘要整理；删除任务特定内容，区分源码、历史观察和建议"
+    },
+    {
+      "path": "skills/ai-image-production/references/styles/japanese-modern-urban-anime.md",
+      "sha256": "7d9df4fc773a438f3840942747ae0420baae08fb7f2d98a579bbeb5e5b8b5074",
+      "treatment": "主题摘要整理；删除任务特定内容，区分源码、历史观察和建议"
+    },
+    {
+      "path": "skills/ai-image-production/references/styles/kawaii-chaotic-crayon-doodle.md",
+      "sha256": "f68e67b87ebaca82cf88ccf3c5f587f0ae61f892f2abbc7894ebc85094c3f8f9",
+      "treatment": "主题摘要整理；删除任务特定内容，区分源码、历史观察和建议"
+    },
+    {
+      "path": "skills/ai-image-production/references/styles/pop-retro-vector-illustration.md",
+      "sha256": "ff937ecf41ff5a65d3c00346efb861ec23187b5ecfff40f02931e18cfd7d8bd8",
+      "treatment": "主题摘要整理；删除任务特定内容，区分源码、历史观察和建议"
+    },
+    {
+      "path": "skills/ai-image-production/references/styles/style-selection.md",
+      "sha256": "7133350dc03b674e60a1691bb8574bba489855f36b3e57682e63e36099740631",
+      "treatment": "主题摘要整理；删除任务特定内容，区分源码、历史观察和建议"
+    },
+    {
+      "path": "skills/ai-image-production/references/styles/ugly-cute-doodle-illustration.md",
+      "sha256": "acb9d5837f3ddb8a36c89049dc549f193bbd6f901caa726b714687fa7538955d",
+      "treatment": "主题摘要整理；删除任务特定内容，区分源码、历史观察和建议"
+    },
+    {
+      "path": "skills/ai-image-production/references/styles/white-handwritten-story-annotations.md",
+      "sha256": "e09d69973a7486972edd4f65453d12bba4bcb25966df29a0268fa7fa6bae9187",
+      "treatment": "主题摘要整理；删除任务特定内容，区分源码、历史观察和建议"
+    },
+    {
+      "path": "skills/ai-image-production/references/tool-preferences.md",
+      "sha256": "dc5a25cac636fda71d55ec7f65feee840f248a1cbab6eeff0ca280774821fe8c",
+      "treatment": "主题摘要整理；删除任务特定内容，区分源码、历史观察和建议"
+    },
+    {
+      "path": "skills/ai-image-production/references/transparent-assets.md",
+      "sha256": "47a16b9231498363563c3fe935c85d73da9d14264e6df8a7dda340964b6594de",
+      "treatment": "主题摘要整理；删除任务特定内容，区分源码、历史观察和建议"
+    },
+    {
+      "path": "skills/ai-image-production/scripts/black-key-to-alpha.mjs",
+      "sha256": "0b5455342b759848e363300fd5e4e438a794b8849842c424c83d3d281b054b91",
+      "treatment": "静态审阅像素和文件行为，未复制执行文件"
+    },
+    {
+      "path": "skills/ai-image-production/scripts/create-alpha-check-preview.mjs",
+      "sha256": "782d4431dc06495a9c897283610604ab816c25a5b1544da6837ac95a5df11ec1",
+      "treatment": "静态审阅像素和文件行为，未复制执行文件"
+    },
+    {
+      "path": "skills/ai-image-production/scripts/image-utils.mjs",
+      "sha256": "264539bee45e0541a7e061af059954dbb090e8fe91a2c083a29da3cc625d27b5",
+      "treatment": "静态审阅像素和文件行为，未复制执行文件"
+    },
+    {
+      "path": "skills/ai-image-production/scripts/inspect-image.mjs",
+      "sha256": "51bca6bf4e89d3ca0a7526b81fac270124d4c01cdcde0b0753c2b70144a1d9b6",
+      "treatment": "静态审阅像素和文件行为，未复制执行文件"
+    },
+    {
+      "path": "skills/ai-image-production/scripts/split-grid-assets.mjs",
+      "sha256": "cb7260ce065180779c47b38cbd1cbe22a211574f24767fa8bf59036b9249aea1",
+      "treatment": "静态审阅像素和文件行为，未复制执行文件"
+    },
+    {
+      "path": "skills/ai-image-production/scripts/test-black-key-to-alpha.mjs",
+      "sha256": "78c4ce991c44071f2d9bea6a03cd023af4378f95fe1b483aaa41b4eacddaadd8",
+      "treatment": "静态核对测试范围与预期冲突，未复制或运行测试"
+    },
+    {
+      "path": "skills/ai-image-production/scripts/test-create-alpha-check-preview.mjs",
+      "sha256": "c7219919384b7cd451efbcd7f4d93b7d87d5ad3a8842fae6253e54e3fdb7103b",
+      "treatment": "静态核对测试范围与预期冲突，未复制或运行测试"
+    },
+    {
+      "path": "skills/ai-image-production/scripts/test-split-grid-assets.mjs",
+      "sha256": "6f236407c5e9388280849641bfffcf4bc8a8b4caccd1016276eb99e89e4186ce",
+      "treatment": "静态核对测试范围与预期冲突，未复制或运行测试"
+    },
+    {
+      "path": "skills/ai-image-production/scripts/trim-transparent.mjs",
+      "sha256": "72a384ea0e8bef0ac86c9b842eaac68bb74e8fce3b97e60a34335a56363cee6e",
+      "treatment": "静态审阅像素和文件行为，未复制执行文件"
+    }
+  ],
+  "sourceInventory": {
+    "skillDocuments": 1,
+    "referenceDocuments": 13,
+    "packageManifests": 1,
+    "localCliScripts": 5,
+    "sharedModules": 1,
+    "localTestScripts": 3,
+    "evalDefinitionFiles": 1,
+    "evalCasesDefined": 14
+  },
+  "excludedMedia": {
+    "count": 6,
+    "totalBytes": 18230696,
+    "treatment": "只列文件元数据；未读取图像内容、未核实许可、未复制",
+    "files": [
+      {
+        "path": "skills/ai-image-production/assets/style-examples/japanese-modern-urban-anime.png",
+        "bytes": 1489729,
+        "contentRead": false,
+        "copied": false
+      },
+      {
+        "path": "skills/ai-image-production/assets/style-examples/kawaii-chaotic-crayon-doodle.png",
+        "bytes": 3780517,
+        "contentRead": false,
+        "copied": false
+      },
+      {
+        "path": "skills/ai-image-production/assets/style-examples/pop-retro-vector-illustration.png",
+        "bytes": 3678826,
+        "contentRead": false,
+        "copied": false
+      },
+      {
+        "path": "skills/ai-image-production/assets/style-examples/shinkai-style.png",
+        "bytes": 2461751,
+        "contentRead": false,
+        "copied": false
+      },
+      {
+        "path": "skills/ai-image-production/assets/style-examples/ugly-cute-doodle-illustration.png",
+        "bytes": 3423809,
+        "contentRead": false,
+        "copied": false
+      },
+      {
+        "path": "skills/ai-image-production/assets/style-examples/white-handwritten-story-annotations.png",
+        "bytes": 3396064,
+        "contentRead": false,
+        "copied": false
+      }
+    ]
+  },
+  "validation": {
+    "staticReviewOnly": true,
+    "sourceTestsRun": false,
+    "modelEvaluationsRun": false,
+    "officialApisReverified": false,
+    "paidApiCalled": false,
+    "dependenciesInstalled": false,
+    "registeredAsSkill": false,
+    "sourceModified": false,
+    "realEnvOrPreferencesRead": false
+  },
+  "licenseReview": {
+    "sourceClassification": "用户指定的本地自维护技能",
+    "standaloneReadmeFound": false,
+    "standaloneLicenseFound": false,
+    "treatment": "本次原创整理文档沿用当前仓库 MIT；原示例图及潜在第三方材料未获重新许可，未来分发需核对来源"
+  },
+  "purpose": "资料判断的来源基线，不是签名、当前接口保证、模型行为评测或图片质量验收",
+  "deduplication": {
+    "sharedSource": "docs/game-asset-production/",
+    "sharedTopicsReferenced": [
+      "规格与静态处理通则",
+      "成员关系与尺寸要求",
+      "局部修改、透明验收与交付",
+      "动画公共坐标与时序",
+      "旧 fal 入口适配的共用边界"
+    ],
+    "retainedDifferences": [
+      "完整图片与指定元素重建分流",
+      "HubKKK 旧路由与个人偏好设计",
+      "Sharp 黑键与整图组件归属",
+      "Alpha 字段、阈值、空 cell 和非整除分区差异",
+      "可选画风与纹理保护",
+      "本技能评测冲突、工具依赖与写入缺口"
+    ],
+    "runtimeDependencyCreated": false,
+    "sharedDocumentsModified": false
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "source": "本地自维护 game-asset-production 的知识与源码；本次摘要整理，不复制运行能力或旧 Git 历史",
+  "sourceCommit": "cc8571b64941acc6f0e5b90dc7e15a3bc8bc4b02",
+  "sourceLastChangeCommit": "cc8571b64941acc6f0e5b90dc7e15a3bc8bc4b02",
+  "reviewDate": "2026-10-05",
+  "scope": "仅 docs 资料；不注册 Skill、不迁入执行脚本、媒体、真实任务记录、依赖或运行配置",
+  "files": [
+    {
+      "path": "skills/game-asset-production/SKILL.md",
+      "sha256": "4cb6a69cca443a275873128d390901edfcbc8fbd07524afedff6b9d11c78d330",
+      "treatment": "主题摘要重整，排除项目特定记录并区分历史观察与现行源码"
+    },
+    {
+      "path": "skills/game-asset-production/references/asset-constraints.md",
+      "sha256": "2d0f985b4c873fddc6fb56ec48d8c49833b947f7fd85eab1e942e1744717658d",
+      "treatment": "主题摘要重整，排除项目特定记录并区分历史观察与现行源码"
+    },
+    {
+      "path": "skills/game-asset-production/references/document-driven-production.md",
+      "sha256": "c3e8e6b59d826f398b028b0fbe2f71b8c82dea59f32064d2140f10e6fe307b37",
+      "treatment": "主题摘要重整，排除项目特定记录并区分历史观察与现行源码"
+    },
+    {
+      "path": "skills/game-asset-production/references/frame-sequence-processing.md",
+      "sha256": "74578186c7c1ddb1762cb125093c02d4f4c4b3f3e774607798d7a870abf4b603",
+      "treatment": "主题摘要重整，排除项目特定记录并区分历史观察与现行源码"
+    },
+    {
+      "path": "skills/game-asset-production/references/frame-sequences.md",
+      "sha256": "8d0db641377e5565277fb6be407f898618feb1c371aadf83009657ff9966827b",
+      "treatment": "主题摘要重整，排除项目特定记录并区分历史观察与现行源码"
+    },
+    {
+      "path": "skills/game-asset-production/references/image-assets.md",
+      "sha256": "fe4df24306385e592679e9eaf04e2fa5e88effbbabcb647c64e747bf0d477b11",
+      "treatment": "主题摘要重整，排除项目特定记录并区分历史观察与现行源码"
+    },
+    {
+      "path": "skills/game-asset-production/references/integration-plan.md",
+      "sha256": "0edad81d76eaf4b18be55bd05116b49030ad3ddd101fdae6eb0671077d2e8242",
+      "treatment": "主题摘要重整，排除项目特定记录并区分历史观察与现行源码"
+    },
+    {
+      "path": "skills/game-asset-production/references/static-sheet-processing.md",
+      "sha256": "9019ff6be1b35a839aa2d4027ccf58867dd1826d898f734ef22a086860c465f7",
+      "treatment": "主题摘要重整，排除项目特定记录并区分历史观察与现行源码"
+    },
+    {
+      "path": "skills/game-asset-production/references/validation-record.md",
+      "sha256": "acad21e9c7c4e272928d0ed862bb41ef15d50533ed82a978cdc739c5ad262f06",
+      "treatment": "主题摘要重整，排除项目特定记录并区分历史观察与现行源码"
+    },
+    {
+      "path": "skills/game-asset-production/scripts/analyze-video-cycle.mjs",
+      "sha256": "4671ebd4c91f6dcef7f3f807c63b15734ab19140cce294ada5137e0d05c4cb5e",
+      "treatment": "源码静态核对，记录职责与缺口，未迁入执行文件"
+    },
+    {
+      "path": "skills/game-asset-production/scripts/detect-residue.mjs",
+      "sha256": "c95b9d3a157feae8e6652e095739d9eba8655b0fb218336b7a15af4a539e9015",
+      "treatment": "源码静态核对，记录职责与缺口，未迁入执行文件"
+    },
+    {
+      "path": "skills/game-asset-production/scripts/index-asset-sheet.mjs",
+      "sha256": "de13ab50bc81e2af47854f156947acf0fe8c2a96ca0e3eae7793997e1ebfa271",
+      "treatment": "源码静态核对，记录职责与缺口，未迁入执行文件"
+    },
+    {
+      "path": "skills/game-asset-production/scripts/prepare-frame-sequence.mjs",
+      "sha256": "c334b1ea2cad6af9703ea9126e5f4a0a1ed89d0aae756f6f3b213d90208b1337",
+      "treatment": "源码静态核对，记录职责与缺口，未迁入执行文件"
+    },
+    {
+      "path": "skills/game-asset-production/scripts/prepare-static-sheet.mjs",
+      "sha256": "ba0419c1c01bd45b291a1d72187ae7e559051eac119582b7bded2954c5c2e281",
+      "treatment": "源码静态核对，记录职责与缺口，未迁入执行文件"
+    },
+    {
+      "path": "skills/game-asset-production/scripts/prepare-video-frames.mjs",
+      "sha256": "607aee0ed12f6889f0ba753a011d09f3a93eb779aa8b63fd20f3a5447288e228",
+      "treatment": "源码静态核对，记录职责与缺口，未迁入执行文件"
+    },
+    {
+      "path": "skills/game-asset-production/scripts/prepare-video-start-frame.mjs",
+      "sha256": "447f62230ff73ad79a24e06016204e1bf3a4b7c4dca55176ecc7d9a070fb6c2e",
+      "treatment": "源码静态核对，记录职责与缺口，未迁入执行文件"
+    },
+    {
+      "path": "skills/game-asset-production/scripts/produce-animal-batch.mjs",
+      "sha256": "be80c9e1a7a5afea5448a6e6f8a40162f95c80a78ee47cd15d3aa81c996e282e",
+      "treatment": "源码静态核对，记录职责与缺口，未迁入执行文件"
+    },
+    {
+      "path": "skills/game-asset-production/scripts/publish-sequence-sheet.mjs",
+      "sha256": "d30262cd08344ee975cdaa173494410381fa136c6e7ba6fccf92e57d94695e55",
+      "treatment": "源码静态核对，记录职责与缺口，未迁入执行文件"
+    },
+    {
+      "path": "skills/game-asset-production/scripts/remove-frames-background.mjs",
+      "sha256": "6129b3ef9f5ddd715140d092a40887ac468710d4bc5042511c972b7a950d75b3",
+      "treatment": "源码静态核对，记录职责与缺口，未迁入执行文件"
+    },
+    {
+      "path": "skills/game-asset-production/scripts/repack-published-size.mjs",
+      "sha256": "38f8f3927febfbdef3afd606c982fc56abd06f3fa74388fc3bff1c58dfbeaa72",
+      "treatment": "源码静态核对，记录职责与缺口，未迁入执行文件"
+    },
+    {
+      "path": "skills/game-asset-production/scripts/run-video-generation.mjs",
+      "sha256": "c1728f78eb54cafd0c2255986e913b4615f1a1eec156890b70dab565c4bfd8df",
+      "treatment": "源码静态核对，记录职责与缺口，未迁入执行文件"
+    },
+    {
+      "path": "skills/game-asset-production/tests/document-driven-scenarios.md",
+      "sha256": "88735d06cce394c5cb6990f23424aaa15ff42deeb856f4fd620282ed96fb27d5",
+      "treatment": "保留测试范围与证据限制，未执行或迁入测试"
+    },
+    {
+      "path": "skills/game-asset-production/tests/prepare-frame-sequence.test.mjs",
+      "sha256": "360166e433233429b9cafd634ef09918e6e2147955e58de9dbd31777f5bcdb88",
+      "treatment": "保留测试范围与证据限制，未执行或迁入测试"
+    },
+    {
+      "path": "skills/game-asset-production/tests/prepare-static-sheet.test.mjs",
+      "sha256": "1cf0034ca6c0dde83812740bd343852db21660b09b291d5f520532c645374245",
+      "treatment": "保留测试范围与证据限制，未执行或迁入测试"
+    }
+  ],
+  "sourceInventory": {
+    "skillDocuments": 1,
+    "referenceDocuments": 8,
+    "scripts": 12,
+    "automatedTestFiles": 2,
+    "manualScenarioFiles": 1
+  },
+  "validation": {
+    "staticReviewOnly": true,
+    "officialApisReverified": false,
+    "sourceTestsRun": false,
+    "paidApiCalled": false,
+    "dependenciesInstalled": false,
+    "registeredAsSkill": false,
+    "sourceModified": false,
+    "realEnvRead": false
+  },
+  "licenseReview": {
+    "sourceClassification": "用户指定的本地自维护技能",
+    "standaloneLicenseFound": false,
+    "treatment": "本次原创整理文档沿用仓库 MIT；未来独立分发需补齐许可和来源，未复制第三方全文或宣称重新授予其权利"
+  },
+  "purpose": "来源基线，仅用于追溯文档判断，不是签名、当前价格或真实接口／产物质量保证"
+}

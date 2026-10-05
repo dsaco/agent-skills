@@ -144,3 +144,94 @@ test('七牛独立文件、许可、SDK声明、四变量文档与引用', async
     }
   }
 });
+
+const exeFiles = [
+  'LICENSE', 'README.md', 'SKILL.md',
+  'references/operations.md', 'references/sharing.md', 'references/billing-and-llm.md',
+  'references/proxy-auth.md', 'references/integrations.md', 'references/secret-delivery.md',
+].sort();
+
+async function validateExeDocs(dir) {
+  assert.deepEqual(await files(dir), exeFiles);
+  const skillText = await readFile(path.join(dir, 'SKILL.md'), 'utf8');
+  assert.match(skillText, /^---\r?\nname: exe-dev\r?\ndescription: .+\r?\ncompatibility: .+\r?\n---/);
+  assert(skillText.split('\n').length < 120, 'Keep the entrypoint short; put details in references');
+  for (const rel of exeFiles.filter(x => x.startsWith('references/'))) {
+    assert(skillText.includes(`](${rel})`), `Reference missing from task routing: ${rel}`);
+  }
+  for (const rel of exeFiles.filter(x => x.endsWith('.md'))) {
+    const text = await readFile(path.join(dir, rel), 'utf8');
+    assert(!/\/Users\/[^\s/]+\//.test(text), `Machine path: ${rel}`);
+    assert(!/context7|ai-pi|DSH|subagent|jev_decide/.test(text), `Host-specific tool dependency: ${rel}`);
+    assert.equal((text.match(/^```/gm) || []).length % 2, 0, `Unclosed code block: ${rel}`);
+    for (const [, href] of text.matchAll(/\]\(([^)]+)\)/g)) {
+      if (/^https?:/.test(href)) continue;
+      const [filePart, fragment] = href.split('#');
+      const target = filePart ? path.resolve(path.dirname(path.join(dir, rel)), filePart) : path.join(dir, rel);
+      assert(target.startsWith(dir + path.sep), `Reference escapes Skill: ${rel}`);
+      assert((await lstat(target)).isFile(), `Missing reference: ${rel} -> ${href}`);
+      if (fragment) {
+        const targetText = await readFile(target, 'utf8');
+        const headings = [...targetText.matchAll(/^#{1,6} (.+)$/gm)].map(([, heading]) => heading.toLowerCase()
+          .replace(/<[^>]*>/g, '').replace(/[^\p{L}\p{N}\s_-]/gu, '').trim().replace(/\s/g, '-'));
+        const anchors = [...targetText.matchAll(/<a id="([^"]+)"/g)].map(([, id]) => id);
+        assert([...headings, ...anchors].includes(decodeURIComponent(fragment)), `Missing anchor: ${rel} -> ${href}`);
+      }
+    }
+  }
+}
+
+test('exe-dev 文档型独立分发：白名单、元数据、许可与渐进引用', async () => {
+  const dir = path.join(root, 'skills/exe-dev');
+  await validateExeDocs(dir);
+  assert.equal(await readFile(path.join(dir, 'LICENSE'), 'utf8'), await readFile(path.join(root, 'LICENSE'), 'utf8'));
+  const source = JSON.parse(await readFile(path.join(root, 'docs/exe-dev-source.json'), 'utf8'));
+  assert.match(source.sourceCommit, /^[a-f0-9]{40}$/);
+  assert.match(source.files[0].sha256, /^[a-f0-9]{64}$/);
+  for (const topic of source.publicDocumentationReview.topics) {
+    assert((await lstat(path.join(root, topic.reference))).isFile());
+    assert(topic.urls.every(url => new URL(url).origin === 'https://exe.dev'));
+  }
+});
+
+test('exe-dev 中文空格目录独立复制后引用完整，无脚本／运行依赖', async () => {
+  const tmp = await mkdtemp(path.join(os.tmpdir(), 'exe-dev-portable-'));
+  try {
+    const dir = path.join(tmp, '技能 安装', 'exe-dev');
+    for (const rel of exeFiles) {
+      const target = path.join(dir, rel);
+      await mkdir(path.dirname(target), { recursive: true });
+      await copyFile(path.join(root, 'skills/exe-dev', rel), target);
+    }
+    await validateExeDocs(dir);
+    const readme = await readFile(path.join(dir, 'README.md'), 'utf8');
+    assert(readme.includes('不要求安装 Node.js'));
+    assert(readme.includes('npx skills add "<本地仓库路径>/skills/exe-dev"'));
+    assert(readme.includes('npx skills add dsaco/agent-skills --skill exe-dev'));
+  } finally { await rm(tmp, { recursive: true, force: true }); }
+});
+
+test('exe-dev 单一流程／边界锚点、引用入口和安装白名单完整', async () => {
+  const dir = path.join(root, 'skills/exe-dev');
+  const text = await readFile(path.join(dir, 'SKILL.md'), 'utf8');
+  for (const id of ['workflow', 'boundaries']) {
+    assert.equal([...text.matchAll(new RegExp(`<a id="${id}"`, 'g'))].length, 1);
+  }
+  for (const rel of exeFiles.filter(x => x.startsWith('references/'))) {
+    const reference = await readFile(path.join(dir, rel), 'utf8');
+    assert(!/^\d+\. /m.test(reference), `Keep the ordered execution flow in SKILL.md: ${rel}`);
+  }
+  const localReadme = await readFile(path.join(dir, 'README.md'), 'utf8');
+  assert(localReadme.includes('(SKILL.md#boundaries)'));
+  const source = JSON.parse(await readFile(path.join(root, 'docs/exe-dev-source.json'), 'utf8'));
+  for (const topic of source.publicDocumentationReview.topics) {
+    const reference = await readFile(path.join(root, topic.reference), 'utf8');
+    assert(topic.urls.some(url => reference.includes(url)), `Missing official source in ${topic.reference}`);
+  }
+  const readme = await readFile(path.join(root, 'README.md'), 'utf8');
+  assert(readme.includes('npx skills add dsaco/agent-skills --skill exe-dev'));
+  const ignore = await readFile(path.join(root, '.gitignore'), 'utf8');
+  assert(ignore.includes('!/skills/exe-dev/'));
+  // Deterministic structure checks only. Branch semantics are reviewed in docs/exe-dev.md,
+  // not inferred from the presence of a prescribed safety sentence.
+});

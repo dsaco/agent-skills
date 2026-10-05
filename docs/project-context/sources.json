@@ -1,0 +1,125 @@
+{
+  "source": "旧 ai-project-init 的基础职责经用户要求重设计；随后参考用户指定项目的开发与文档闭环",
+  "sourceCommit": "cc8571b64941acc6f0e5b90dc7e15a3bc8bc4b02",
+  "sourceLastChangeCommit": "998a129283db4b4bf77ecdc3d80e44ac06ad7d9e",
+  "reviewDate": "2026-10-05",
+  "newName": "project-context",
+  "scope": "仅生成 docs 下草稿、模板与审阅说明；未应用到当前项目、未注册或安装 Skill",
+  "files": [
+    {
+      "path": "old_skills/ai-project-init/SKILL.md",
+      "sha256": "358a09427cec1a5cd64a98032acd55099399405da731594f383b5582214e8294",
+      "treatment": "静态参考；重写流程／模板；未复制旧执行评测产物"
+    },
+    {
+      "path": "old_skills/ai-project-init/assets/AGENTS.md",
+      "sha256": "bbd6462d22ea992f1760b962c7c1f22af2cd50af7367bd0b4948264a418f41d0",
+      "treatment": "静态参考；重写流程／模板；未复制旧执行评测产物"
+    },
+    {
+      "path": "old_skills/ai-project-init/assets/docs/PROJECT.md",
+      "sha256": "23517dfd0f3f6f15f6c2be3032219300605c17e672c0418dfe8228f2ea1c3b3c",
+      "treatment": "静态参考；重写流程／模板；未复制旧执行评测产物"
+    },
+    {
+      "path": "old_skills/ai-project-init/assets/docs/STATUS.md",
+      "sha256": "a7c7c0d1a52559190f8253f58827dca67d1feb4a35283324fb7c2ffc9e23ab60",
+      "treatment": "静态参考；重写流程／模板；未复制旧执行评测产物"
+    },
+    {
+      "path": "old_skills/ai-project-init/assets/docs/adr/README.md",
+      "sha256": "fb2f94d73c04380943feb824be73d7ee210066779278fc011cec4e5180d26d3d",
+      "treatment": "静态参考；重写流程／模板；未复制旧执行评测产物"
+    },
+    {
+      "path": "old_skills/ai-project-init/assets/docs/adr/template.md",
+      "sha256": "5bebacf5f4a46c22836507c6c9ab2939ff143711fa501210d373d54a20b60d46",
+      "treatment": "静态参考；重写流程／模板；未复制旧执行评测产物"
+    },
+    {
+      "path": "old_skills/ai-project-init/evals/evals.json",
+      "sha256": "c6b376c48b7b9eceadf913d56e13c37b23c6c24eb14d8b9288247062b3b7e0b1",
+      "treatment": "静态参考；重写流程／模板；未复制旧执行评测产物"
+    },
+    {
+      "path": "old_skills/ai-project-init/evals/files/existing-adr/docs/adr/0042-local-first.md",
+      "sha256": "f01ef2d159c168b219d1514ffe2d7d111af999024a48b67f5ee6c9c9ba3a49fa",
+      "treatment": "静态参考；重写流程／模板；未复制旧执行评测产物"
+    },
+    {
+      "path": "old_skills/ai-project-init/evals/files/existing-adr/docs/adr/README.md",
+      "sha256": "41db2d4a710ede659a912fb1fc2bb1a32f9f5101147336fa1d1b1fc8b7c75b5e",
+      "treatment": "静态参考；重写流程／模板；未复制旧执行评测产物"
+    },
+    {
+      "path": "old_skills/ai-project-init/evals/files/existing-project/AGENTS.md",
+      "sha256": "6a0fae82952a6ae26651f006a28a5056be59c83b75925940f560f92fc8b2e53e",
+      "treatment": "静态参考；重写流程／模板；未复制旧执行评测产物"
+    },
+    {
+      "path": "old_skills/ai-project-init/evals/files/existing-project/README.md",
+      "sha256": "a509261ebba0195da0bab54b68eefae85b0be18901cc9dcfb2968e967580a93b",
+      "treatment": "静态参考；重写流程／模板；未复制旧执行评测产物"
+    }
+  ],
+  "changes": [
+    "长期约束、开发导航、剩余待办、当前实现与证据分别归位",
+    "STATUS 只保存当前执行、剩余验收与暂停；先更新专题再移除完成项，无任务写暂无待办",
+    "默认开发入口为 docs/development.md、待办为 docs/STATUS.md；已有路径和大小写保持",
+    "增加按需实现与验证专题、测试方法模板；调研和未实施规划不混入当前任务",
+    "单目标小步推进，按影响选择验证，验收或真实阻断后收尾停止",
+    "不复制参考项目专属工具、技术栈、子代理授权、无兼容要求或统一删除策略"
+  ],
+  "licenseReview": {
+    "sourceClassification": "用户提供的本地自维护技能",
+    "sourceLicenseFileFound": false,
+    "treatment": "本次原创重写草稿与模板按当前仓库 MIT；不据此宣称旧目录或潜在第三方材料获得再许可"
+  },
+  "validation": {
+    "staticReviewOnly": true,
+    "modelEvaluationsRun": false,
+    "installedAsSkill": false,
+    "appliedToProject": false,
+    "sourceModified": false
+  },
+  "purpose": "来源基线，不导入旧 Git 历史；摘要不证明模型行为、宿主支持或发布状态",
+  "workflowReference": {
+    "project": "ai-pi",
+    "sourceCommit": "216012383a385ef5041fc8813fb14327436eb61d",
+    "scope": "只读参考 7 份指定文档；抽象组织方式与流程，不复制产品实现或执行命令",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "2e65e2519105151e6e33183dce24b6777f69171ca71eaf0d9154f57d190b8e7b"
+      },
+      {
+        "path": "README.md",
+        "sha256": "6094a5b9c4e43328d45c3c5864ad480f345846d40f57c392dcab8187545d34e6"
+      },
+      {
+        "path": "DESIGN.md",
+        "sha256": "e239d73cc980cfc9c6b394492b2c6f6f64dcb00534a0cea59877a16ad65bb3d7"
+      },
+      {
+        "path": "docs/STATUS.md",
+        "sha256": "39fa81f138314918687e11008c672574c0baa0e3d9f02738c56c6ca7e10b25ad"
+      },
+      {
+        "path": "docs/development.md",
+        "sha256": "ad604ba99237831df9a89e35e4f256aee92af4549a89caf9cd841b0604b070fa"
+      },
+      {
+        "path": "docs/validation/testing.md",
+        "sha256": "50664258ce59720827fc242f4c10e76a515bb7ea447f8dda2ec088910bc26651"
+      },
+      {
+        "path": "docs/validation/instructions-validation.md",
+        "sha256": "eca8212cd20507d7b38ade2bfaa98d15d5b018bb023b3ecdcef5c52ef9b478a7"
+      }
+    ],
+    "rootLicenseFileFound": false,
+    "licenseTreatment": "未发现根 LICENSE；仅抽象流程模式并独立重写，不导入来源代码、UI 规范或文档全文，不宣称来源材料适用本仓库 MIT",
+    "sourceModified": false,
+    "commandsExecuted": false
+  }
+}

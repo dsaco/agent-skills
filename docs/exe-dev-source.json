@@ -1,0 +1,61 @@
+{
+  "source": "本地自维护 exe-dev；仅导入技能正文，不导入旧仓库历史或配置",
+  "sourceCommit": "cc8571b64941acc6f0e5b90dc7e15a3bc8bc4b02",
+  "files": [
+    {
+      "path": "skills/exe-dev/SKILL.md",
+      "sha256": "864d225643515bb29282af6f6c446e716dafc7fe09c7d87cf7327b621ea333da"
+    }
+  ],
+  "purpose": "源文件导入前摘要，仅作溯源，不是签名",
+  "publicDocumentationReview": {
+    "date": "2026-10-05",
+    "method": "公开 Markdown 正文；没有登录账户、执行 SSH 或 VM 命令",
+    "topics": [
+      {
+        "reference": "skills/exe-dev/references/operations.md",
+        "urls": [
+          "https://exe.dev/docs.md"
+        ]
+      },
+      {
+        "reference": "skills/exe-dev/references/sharing.md",
+        "urls": [
+          "https://exe.dev/docs/cli-share.md",
+          "https://exe.dev/docs/sharing.md",
+          "https://exe.dev/docs/teams/vms.md",
+          "https://exe.dev/docs/teams/sharing-controls.md",
+          "https://exe.dev/docs/invites.md",
+          "https://exe.dev/docs/cli-invite.md"
+        ]
+      },
+      {
+        "reference": "skills/exe-dev/references/billing-and-llm.md",
+        "urls": [
+          "https://exe.dev/docs/billing/personal.md",
+          "https://exe.dev/docs/billing/work.md",
+          "https://exe.dev/docs/cli-billing.md",
+          "https://exe.dev/docs/integrations-llm.md"
+        ]
+      },
+      {
+        "reference": "skills/exe-dev/references/proxy-auth.md",
+        "urls": [
+          "https://exe.dev/docs/proxy.md",
+          "https://exe.dev/docs/login-with-exe.md",
+          "https://exe.dev/docs/https-tokens-for-vms.md"
+        ]
+      },
+      {
+        "reference": "skills/exe-dev/references/integrations.md",
+        "urls": [
+          "https://exe.dev/docs/faq/cross-vm-networking.md",
+          "https://exe.dev/docs/integrations-vm-to-vm.md",
+          "https://exe.dev/docs/integrations-http-proxy.md",
+          "https://exe.dev/docs/integrations-attach.md",
+          "https://exe.dev/docs/integrations.md"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "source": "本地自维护 hubkkk，来源为旧技能代码／文档；不导入 Git 历史",
+  "sourceCommit": "cc8571b64941acc6f0e5b90dc7e15a3bc8bc4b02",
+  "reviewDate": "2026-10-05",
+  "scope": "仅文档整理；源码静态审阅，不迁入执行脚本，不注册 Skill，不更新运行配置",
+  "files": [
+    {
+      "path": "skills/hubkkk/SKILL.md",
+      "sha256": "37bc31f39d321e3c656ef9d01b51f09eebbc1b50b6475268a084c3166728fa1a",
+      "treatment": "摘要重整，删除项目特定信息并标注历史／待核对结论"
+    },
+    {
+      "path": "skills/hubkkk/references/banana2-guan.md",
+      "sha256": "00bc2bbe61853272de3bea1c6e73ab4d3f75ee5518306ae931747060b1540def",
+      "treatment": "摘要重整，删除项目特定信息并标注历史／待核对结论"
+    },
+    {
+      "path": "skills/hubkkk/references/gpt-image-2-guan.md",
+      "sha256": "517b93d0093327adc83b269229f5db566c4509f32053cdbe23e2acef7b2cb919",
+      "treatment": "摘要重整，删除项目特定信息并标注历史／待核对结论"
+    },
+    {
+      "path": "skills/hubkkk/references/gpt-image-2.md",
+      "sha256": "cc888f782276b82ae2a374898e92297cbc89348a005f765bcb1bbd9ba775f8cd",
+      "treatment": "摘要重整，删除项目特定信息并标注历史／待核对结论"
+    },
+    {
+      "path": "skills/hubkkk/references/nano-banana-2.md",
+      "sha256": "f92999e2663602b8f7350857058a2964750793d33fdbb0b57e1597cfc71c6ad1",
+      "treatment": "摘要重整，删除项目特定信息并标注历史／待核对结论"
+    },
+    {
+      "path": "skills/hubkkk/scripts/banana2.js",
+      "sha256": "31e4b912b86a50589190ec5d530d8594839ac639854bd71b128f9b2a567d39fc",
+      "treatment": "静态审阅，未复制可执行文件"
+    },
+    {
+      "path": "skills/hubkkk/scripts/generate-image.js",
+      "sha256": "34a5b39be71a01a522aad19d79b7009ce015ec4d251cd309ecf8e13a9fecca0d",
+      "treatment": "静态审阅，未复制可执行文件"
+    },
+    {
+      "path": "skills/hubkkk/scripts/gpt-image-2.js",
+      "sha256": "b9937162548ee3f82379c29583f733fd33cd1b027a16773c2525e8e441f52e8e",
+      "treatment": "静态审阅，未复制可执行文件"
+    },
+    {
+      "path": "skills/hubkkk/scripts/shared.js",
+      "sha256": "ee16e08d1fa9d3ea8018254dbdc2ed29ce5bcb427ba8595174d99f43ebe08f40",
+      "treatment": "静态审阅，未复制可执行文件"
+    }
+  ],
+  "validation": {
+    "officialPoliciesReverified": false,
+    "paidApiCalled": false,
+    "cloudOrAccountChanged": false,
+    "sourceModified": false
+  },
+  "licenseNote": "仅整理自维护说明并链接资料；不复制第三方官方全文、标准或 SDK。上游材料权利不由本仓库 LICENSE 重新授予。",
+  "purpose": "导入前来源摘要，仅用于溯源，不是发布者签名或接口有效性证明"
+}

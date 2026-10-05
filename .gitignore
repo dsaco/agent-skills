@@ -1,4 +1,27 @@
-# Credentials and local configuration
+# 默认忽略根目录的本地状态，仅放行源码与维护文件。
+/*
+!/.gitignore
+!/.gitattributes
+!/README.md
+!/LICENSE
+!/AGENTS.md
+!/package.json
+!/package-lock.json
+!/docs/
+!/tests/
+!/scripts/
+!/.github/
+!/skills/
+
+# skills 默认不入库。每次收录自维护技能时，明确添加目录白名单。
+/skills/*
+!/skills/fal-ai/
+!/skills/volcengine-ark-media/
+!/skills/dashscope-tts/
+!/skills/qiniu/
+!/skills/exe-dev/
+
+# 凭据与机器配置：即使位于已放行目录也不得入库。
 .env
 .env.*
 *.env
@@ -6,29 +29,33 @@
 *.key
 .npmrc
 .workspace.env
+.skill-lock.json
+skills-lock.json
 
-# Dependencies and generated files
+# 依赖、缓存与运行产物。
 node_modules/
 __pycache__/
 *.pyc
 .DS_Store
+Thumbs.db
+.pi-subagents/
+.playwright-cli/
+output/
+outputs/
+fal-output/
 coverage/
 artifacts/
 dist/
-output/
-fal-output/
 *.log
 
-# Private task inputs and responses (do not run real jobs inside this repo)
+# 真实任务输入、响应与临时文件。
 request.json
 status.json
 result.json
 downloads.json
 cancel.json
-*.part
-*.tmp
-
-# Ark private task records
+create.json
 *.submission.json
 *.price.json
-create.json
+*.part
+*.tmp

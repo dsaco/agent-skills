@@ -1,0 +1,16 @@
+# 统一跨平台文本换行；显式通过 node/python 调用脚本，不依赖执行位。
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.mp3 binary
+*.wav binary
+*.mp4 binary
+*.mov binary

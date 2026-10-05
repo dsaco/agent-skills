@@ -1,0 +1,76 @@
+{
+  "source": "本地自维护 wechat-miniprogram-ops，来源为旧技能代码／文档；不导入 Git 历史",
+  "sourceCommit": "cc8571b64941acc6f0e5b90dc7e15a3bc8bc4b02",
+  "reviewDate": "2026-10-05",
+  "scope": "仅文档整理；源码静态审阅，不迁入执行脚本，不注册 Skill，不更新运行配置",
+  "files": [
+    {
+      "path": "skills/wechat-miniprogram-ops/SKILL.md",
+      "sha256": "d0683c3573072a3133d1c3cd32e5333164663a3092a719816585d5f51aeded70",
+      "treatment": "摘要重整，删除项目特定信息并标注历史／待核对结论"
+    },
+    {
+      "path": "skills/wechat-miniprogram-ops/references/aigc-labeling.md",
+      "sha256": "b9336e7882ae25ebdffcc76ede5122a45fff480ba387cb706d8984c5dc9262f2",
+      "treatment": "摘要重整，删除项目特定信息并标注历史／待核对结论"
+    },
+    {
+      "path": "skills/wechat-miniprogram-ops/references/client-rendering.md",
+      "sha256": "42b78e3adf4d74a0d99b19a08419f823e69306231c117140d49391e93bf88fe8",
+      "treatment": "摘要重整，删除项目特定信息并标注历史／待核对结论"
+    },
+    {
+      "path": "skills/wechat-miniprogram-ops/references/cloud-env.md",
+      "sha256": "53c3e530636977cfba15b814c13a4acbcf2b425f9730a0a376b677153de65647",
+      "treatment": "摘要重整，删除项目特定信息并标注历史／待核对结论"
+    },
+    {
+      "path": "skills/wechat-miniprogram-ops/references/cloud-migration.md",
+      "sha256": "022058622b684de30dd083983ecf480ff891f27fe9e141108be7b6300a0d3e51",
+      "treatment": "摘要重整，删除项目特定信息并标注历史／待核对结论"
+    },
+    {
+      "path": "skills/wechat-miniprogram-ops/references/contact-and-diversion.md",
+      "sha256": "be59913f0c54d5999f8d8f0f82310fa93ee25627b2ef2dd5bd9ba37c2a640094",
+      "treatment": "摘要重整，删除项目特定信息并标注历史／待核对结论"
+    },
+    {
+      "path": "skills/wechat-miniprogram-ops/references/devtools-cli.md",
+      "sha256": "3b453d46403d35aaa2b9fc36085a91c0fb5128157e713cdbc1b84f0353671696",
+      "treatment": "摘要重整，删除项目特定信息并标注历史／待核对结论"
+    },
+    {
+      "path": "skills/wechat-miniprogram-ops/references/privacy-guideline.md",
+      "sha256": "3b0a0fc405fe5fef8ceda39483a240b654cd5853b9e1c13605038ca6ab47b429",
+      "treatment": "摘要重整，删除项目特定信息并标注历史／待核对结论"
+    },
+    {
+      "path": "skills/wechat-miniprogram-ops/references/record-filing.md",
+      "sha256": "1075f8809aba92bd36cb5b1c11b1f3fd3cbe7a8b09a8da24368a21cc18dab561",
+      "treatment": "摘要重整，删除项目特定信息并标注历史／待核对结论"
+    },
+    {
+      "path": "skills/wechat-miniprogram-ops/references/subscribe-message.md",
+      "sha256": "ed6d19d97ccca0fcab4330e6522b596afe1df9cfe5a0d94e94649f1304d33df3",
+      "treatment": "摘要重整，删除项目特定信息并标注历史／待核对结论"
+    },
+    {
+      "path": "skills/wechat-miniprogram-ops/references/virtual-payment.md",
+      "sha256": "c64cd5100df89a4e9a83657e3cfd3154a753edc1999f7375103db4ea4390b6df",
+      "treatment": "摘要重整，删除项目特定信息并标注历史／待核对结论"
+    },
+    {
+      "path": "skills/wechat-miniprogram-ops/scripts/setup-db.js",
+      "sha256": "0628163fe6ebeb447626ed68997634996a1c535a4f762319a13a7ae7504f039e",
+      "treatment": "静态审阅，未复制可执行文件"
+    }
+  ],
+  "validation": {
+    "officialPoliciesReverified": false,
+    "paidApiCalled": false,
+    "cloudOrAccountChanged": false,
+    "sourceModified": false
+  },
+  "licenseNote": "仅整理自维护说明并链接资料；不复制第三方官方全文、标准或 SDK。上游材料权利不由本仓库 LICENSE 重新授予。",
+  "purpose": "导入前来源摘要，仅用于溯源，不是发布者签名或接口有效性证明"
+}
