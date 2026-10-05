@@ -79,3 +79,50 @@ test('移动到含空格与中文的新目录后独立 CLI 可用，无 Key／�
     assert.deepEqual(await files(installed), expected.filter(x => x !== 'tests/fal.test.mjs'));
   } finally { await rm(tmp, { recursive: true, force: true }); }
 });
+
+test('Ark 独立分发白名单、CommonJS 边界、许可与相对引用', async () => {
+  const ark = path.join(root, 'skills/volcengine-ark-media');
+  const allowed = [
+    'LICENSE', 'README.md', 'SKILL.md', 'package.json',
+    'references/jobs.md', 'references/prompt-guide.md', 'references/seedance-2.0.md', 'references/seedream-image.md',
+    'scripts/ark-media.js', 'scripts/create-video.js', 'scripts/generate-image.js', 'scripts/download-images.js',
+    'scripts/query-video.js', 'scripts/runtime.js', 'tests/ark-media.test.cjs',
+  ].sort();
+  assert.deepEqual(await files(ark), allowed);
+  assert.equal(await readFile(path.join(ark, 'LICENSE'), 'utf8'), await readFile(path.join(root, 'LICENSE'), 'utf8'));
+  const manifest = JSON.parse(await readFile(path.join(ark, 'package.json'), 'utf8'));
+  assert.equal(manifest.type, 'commonjs'); assert.equal(manifest.private, true);
+  assert.equal(manifest.dependencies, undefined); assert.equal(manifest.devDependencies, undefined);
+  assert.match(await readFile(path.join(ark, 'SKILL.md'), 'utf8'), /^---\nname: volcengine-ark-media\ndescription: .+\ncompatibility: .+\n---/);
+  for (const rel of allowed.filter(x => x.endsWith('.md'))) {
+    const source = await readFile(path.join(ark, rel), 'utf8');
+    assert(!/\/Users\/[^\s/]+\//.test(source), `Machine path in ${rel}`);
+    assert(!source.includes('"skills/volcengine-ark-media/scripts/'), `cwd-bound invocation in ${rel}`);
+    for (const [, href] of source.matchAll(/\]\(([^)]+)\)/g)) {
+      if (/^(https?:|#)/.test(href)) continue;
+      const target = path.resolve(path.dirname(path.join(ark, rel)), href.split('#')[0]);
+      assert(target.startsWith(ark + path.sep), `Reference escapes skill: ${rel}`);
+      assert((await lstat(target)).isFile(), `Missing reference in ${rel}`);
+    }
+  }
+});
+
+test('百炼独立分发白名单、许可、元数据、本地引用与宿主无关性', async () => {
+  const dir = path.join(root, 'skills/dashscope-tts');
+  const allowed = ['LICENSE', 'README.md', 'SKILL.md', 'references/jobs.md',
+    'references/models-and-voices.md', 'references/qwen-tts-api.md', 'references/speech-synthesizer-api.md',
+    'scripts/models.mjs', 'scripts/tts.mjs', 'tests/tts.test.mjs'].sort();
+  assert.deepEqual(await files(dir), allowed);
+  assert.equal(await readFile(path.join(dir, 'LICENSE'), 'utf8'), await readFile(path.join(root, 'LICENSE'), 'utf8'));
+  assert.match(await readFile(path.join(dir, 'SKILL.md'), 'utf8'), /^---\nname: dashscope-tts\ndescription: .+\ncompatibility: .+\n---/);
+  for (const rel of allowed.filter(x => x.endsWith('.md'))) {
+    const source = await readFile(path.join(dir, rel), 'utf8');
+    assert(!/\/Users\/[^\s/]+\//.test(source));
+    assert(!/AuroraPlatformWeb|ai-pi|DSH/.test(source));
+    for (const [, href] of source.matchAll(/\]\(([^)]+)\)/g)) {
+      if (/^(https?:|#)/.test(href)) continue;
+      const target = path.resolve(path.dirname(path.join(dir, rel)), href.split('#')[0]);
+      assert(target.startsWith(dir + path.sep)); assert((await lstat(target)).isFile());
+    }
+  }
+});

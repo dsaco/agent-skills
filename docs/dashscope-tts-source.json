@@ -1,0 +1,22 @@
+{
+  "source": "本地已安装 dashscope-tts；未提供独立版本或 Git 提交",
+  "purpose": "导入前源码摘要，仅用于溯源，不是签名",
+  "files": [
+    {
+      "path": "SKILL.md",
+      "sha256": "8d5e7eb1b310dd28b975cd401f47c797489597afada36b9db25c94932354a92b"
+    },
+    {
+      "path": "references/models-and-voices.md",
+      "sha256": "a65a6386b55dbbedd3b67cdb16c75b756160b7495da69c8c3b99ab14b18d9f8c"
+    },
+    {
+      "path": "references/qwen-tts-api.md",
+      "sha256": "cac18ef6cb0a50151c908f2eed67760879752c390b3fcdc0a52d53c66fd3a615"
+    },
+    {
+      "path": "references/speech-synthesizer-api.md",
+      "sha256": "9b2a5b9ae1dffeecb29156a94e1a417a58c81f6a80befd081d90051be7304a52"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "volcengine-ark-media",
+  "private": true,
+  "type": "commonjs",
+  "license": "MIT",
+  "engines": { "node": ">=22" },
+  "scripts": { "test": "node --test tests/ark-media.test.cjs" }
+}

@@ -1,0 +1,38 @@
+{
+  "source": "本地已安装 volcengine-ark-media；未提供独立版本或 Git 提交",
+  "purpose": "导入前源码摘要，仅用于溯源，不是签名",
+  "files": [
+    {
+      "path": "SKILL.md",
+      "sha256": "aaf9abd212c896a9bff57ed3d782fb8b27aa2173a9bc3130ef1e074eebef6698"
+    },
+    {
+      "path": "scripts/ark-media.js",
+      "sha256": "c64b33eaf2bde8a658a079894aea8494b126ffeb1c4b5c3e903fbdc11e5728c5"
+    },
+    {
+      "path": "scripts/create-video.js",
+      "sha256": "5e764ed07cc9bc80941c89369688329fba67f5840386cf0cdad4f52603c9e4df"
+    },
+    {
+      "path": "scripts/generate-image.js",
+      "sha256": "fc666e4db7ae2dc77884d210d2f8a03346f0a1fae801f23ff7c54e61c86ea565"
+    },
+    {
+      "path": "scripts/query-video.js",
+      "sha256": "1f7711df6b44dccd5c51ed2c0d59d474841cf0a4ec5f177b781cce57ef0008d8"
+    },
+    {
+      "path": "references/prompt-guide.md",
+      "sha256": "ca3772018b564212f11fab6427923e9e56e66347d516336eb9581acfcc242be6"
+    },
+    {
+      "path": "references/seedance-2.0.md",
+      "sha256": "7db6d8b083650819150627506caecd7dc504202e52d1116598d37d0458bcdc99"
+    },
+    {
+      "path": "references/seedream-image.md",
+      "sha256": "af9952cca71e6bd5890794494dbeeda187a44759dac932bf529433401afc4521"
+    }
+  ]
+}

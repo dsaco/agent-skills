@@ -27,3 +27,8 @@ downloads.json
 cancel.json
 *.part
 *.tmp
+
+# Ark private task records
+*.submission.json
+*.price.json
+create.json
