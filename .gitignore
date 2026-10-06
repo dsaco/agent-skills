@@ -13,7 +13,8 @@
 !/.github/
 !/skills/
 
-# skills 默认不入库。每次收录自维护技能时，明确添加目录白名单。
+# skills 默认不入库；browser-skill 等第三方安装副本由此规则覆盖。
+# 每次收录自维护技能时，明确添加目录白名单。
 /skills/*
 !/skills/fal-ai/
 !/skills/volcengine-ark-media/
@@ -41,6 +42,8 @@ __pycache__/
 Thumbs.db
 .pi-subagents/
 .playwright-cli/
+# BrowserSkill 本地 BSK_HOME：daemon 状态、配置、调试与审计记录。
+.bsk/
 output/
 outputs/
 fal-output/

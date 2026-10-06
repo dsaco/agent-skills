@@ -31,7 +31,7 @@ npx skills add dsaco/agent-skills --skill exe-dev
 
 ## 第三方 Skill
 
-直接从上游安装，安装副本不纳入 Git。下面是用户级命令；项目级去掉 `-g`。**`-g` 写入实际用户级技能目录，不是当前工作目录。**
+直接从上游安装，安装副本不纳入 Git。本仓库的 `skills/` 采用自维护目录白名单，以下第三方技能都保持忽略。下面是用户级命令；项目级去掉 `-g`。**`-g` 写入实际用户级技能目录，不是当前工作目录。** 安装后核对实际目录，同一宿主只保留一份加载中的副本；清理旧副本前先比较内容和依赖。
 
 ```sh
 npx skills add tencentcloudbase/cloudbase-skills --skill cloudbase -g
@@ -45,6 +45,8 @@ npx skills add mattpocock/skills --skill writing-for-agents -g
 ```
 
 `writing-great-skills` 当前上游名为 [`writing-for-agents`](https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents)，旧副本不会自动更名。各电脑分别安装；依赖、许可和权限以上游为准，包括 CloudBase 账户／环境、Playwright CLI／浏览器及 ElevenLabs SDK。
+
+[BrowserSkill](https://github.com/Tencent/BrowserSkill)：通过 `bsk` CLI 和 Chrome／Edge 扩展复用浏览器登录，支持 macOS／Windows／Linux；安装见[官方指南](https://github.com/Tencent/BrowserSkill/blob/main/AGENT_INSTALL.md)。
 
 ## 环境变量
 
@@ -60,7 +62,7 @@ npx skills add mattpocock/skills --skill writing-for-agents -g
 
 exe-dev 使用已有 SSH 认证，无固定环境变量。其余第三方技能的认证按上游说明，不预设通用 Key。
 
-**自维护脚本不自动加载 `.env`**，运行时需由本地启动流程注入所需变量。密钥只在本地填写，不发到聊天、不提交；安装或配置不等于授权付费调用。
+**自维护脚本不自动加载 `.env`**，运行时需由本地启动流程注入所需变量。Windows 用户环境变量更新后，重新启动终端或 Agent 以读取新值。密钥只在本地填写，不发到聊天、不提交；安装或配置不等于授权付费调用。
 
 ## 开发与验证
 
