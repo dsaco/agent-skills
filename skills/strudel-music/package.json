@@ -1,0 +1,8 @@
+{
+  "name": "strudel-music-skill",
+  "private": true,
+  "type": "commonjs",
+  "license": "MIT",
+  "engines": { "node": ">=22" },
+  "scripts": { "test": "node --test tests/strudel.test.cjs" }
+}

@@ -235,3 +235,50 @@ test('exe-dev 单一流程／边界锚点、引用入口和安装白名单完整
   // Deterministic structure checks only. Branch semantics are reviewed in docs/exe-dev.md,
   // not inferred from the presence of a prescribed safety sentence.
 });
+
+const strudelFiles = [
+  'LICENSE', 'README.md', 'SKILL.md', 'package.json',
+  'references/composition.md', 'references/rendering.md', 'references/sounds.md',
+  'scripts/calculate_timing.py', 'scripts/extract_second_loop.sh', 'scripts/render_strudel_wav.js', 'scripts/validate_wav.py',
+  'tests/strudel.test.cjs',
+].sort();
+
+test('Strudel 独立分发：白名单、CommonJS、许可、渐进引用与通用内容', async () => {
+  const dir = path.join(root, 'skills/strudel-music');
+  assert.deepEqual(await files(dir), strudelFiles);
+  assert.equal(await readFile(path.join(dir, 'LICENSE'), 'utf8'), await readFile(path.join(root, 'LICENSE'), 'utf8'));
+  const manifest = JSON.parse(await readFile(path.join(dir, 'package.json'), 'utf8'));
+  assert.equal(manifest.type, 'commonjs'); assert.equal(manifest.private, true);
+  assert.equal(manifest.dependencies, undefined); assert.equal(manifest.devDependencies, undefined);
+  const skillText = await readFile(path.join(dir, 'SKILL.md'), 'utf8');
+  assert.match(skillText, /^---\nname: strudel-music\ndescription: .+\ncompatibility: .+\n---/);
+  assert(skillText.split('\n').length < 120, 'Keep the entrypoint short; put details in references');
+  for (const rel of strudelFiles.filter(x => x.startsWith('references/'))) {
+    assert(skillText.includes(`](${rel}`), `Reference missing from SKILL.md: ${rel}`);
+  }
+  for (const rel of strudelFiles) {
+    if (rel === 'LICENSE') continue;
+    const text = await readFile(path.join(dir, rel), 'utf8');
+    assert(!/\/Users\/[^\s/]+\//.test(text), `Machine path: ${rel}`);
+    // Generic skill: no themed example content.
+    assert(!/恐龙|dinosaur|\bdino|jungle|丛林|侏罗纪/i.test(text), `Themed content in ${rel}`);
+    if (!rel.endsWith('.md')) continue;
+    assert.equal((text.match(/^```/gm) || []).length % 2, 0, `Unclosed code block: ${rel}`);
+    for (const [, href] of text.matchAll(/\]\(([^)]+)\)/g)) {
+      if (/^https?:/.test(href)) continue;
+      const [filePart, fragment] = href.split('#');
+      const target = filePart ? path.resolve(path.dirname(path.join(dir, rel)), filePart) : path.join(dir, rel);
+      assert(target.startsWith(dir + path.sep), `Reference escapes Skill: ${rel}`);
+      assert((await lstat(target)).isFile(), `Missing reference: ${rel} -> ${href}`);
+      if (fragment) {
+        const headings = [...(await readFile(target, 'utf8')).matchAll(/^#{1,6} (.+)$/gm)].map(([, heading]) => heading.toLowerCase()
+          .replace(/<[^>]*>/g, '').replace(/[^\p{L}\p{N}\s_-]/gu, '').trim().replace(/\s/g, '-'));
+        assert(headings.includes(decodeURIComponent(fragment)), `Missing anchor: ${rel} -> ${href}`);
+      }
+    }
+  }
+  const readme = await readFile(path.join(root, 'README.md'), 'utf8');
+  assert(readme.includes('npx skills add dsaco/agent-skills --skill strudel-music'));
+  assert((await readFile(path.join(root, '.gitignore'), 'utf8')).includes('!/skills/strudel-music/'));
+  assert(manifest.scripts.test.includes('tests/strudel.test.cjs'));
+});

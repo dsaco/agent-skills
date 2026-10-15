@@ -11,6 +11,7 @@ dsaco 个人维护的 [Agent Skills 集合](https://github.com/dsaco/agent-skill
 | [dashscope-tts](skills/dashscope-tts/SKILL.md) | 百炼非流式语音合成与补下载 | Node.js 22+，无 npm 依赖 |
 | [qiniu](skills/qiniu/SKILL.md) | 本地文件上传七牛并返回访问 URL | Node.js 22+，真实上传需官方 qiniu SDK |
 | [exe-dev](skills/exe-dev/SKILL.md) | exe.dev 部署排障、权限、集成与计费咨询 | 文档型；实际操作需账户、SSH 与授权 |
+| [strudel-music](skills/strudel-music/SKILL.md) | Strudel 编曲、离线渲染 WAV，预检与音频校验 | Node.js 22+、Playwright 与本机 Chrome、Python 3；需访问 strudel.cc |
 
 参数、依赖和能力边界见各技能的 `SKILL.md` 与 `README.md`。
 
@@ -25,6 +26,7 @@ npx skills add dsaco/agent-skills --skill volcengine-ark-media
 npx skills add dsaco/agent-skills --skill dashscope-tts
 npx skills add dsaco/agent-skills --skill qiniu
 npx skills add dsaco/agent-skills --skill exe-dev
+npx skills add dsaco/agent-skills --skill strudel-music
 ```
 
 本地安装可用 `npx skills add "<本地仓库路径>/skills/<name>"`。也可克隆／下载源码，将完整技能目录放入宿主支持的位置，保留 `SKILL.md`、references、脚本及依赖声明（若有）、LICENSE。安装器的本地路径模式会产生安装副本，不是持续链接开发源码。
