@@ -1,12 +1,14 @@
 # volcengine-ark-media
 
-火山方舟 Seedream 图片与 Seedance 视频技能，入口见 [SKILL.md](SKILL.md)。不是火山引擎官方项目。
+火山方舟 Seedream 图片、Seedance 视频与豆包录音转写技能，入口见 [SKILL.md](SKILL.md)。不是火山引擎官方项目。
 
 ## 安装与环境
 
 需要 Node.js 22+，无需 `npm install`。完整复制本目录，保留 `package.json`（声明 CommonJS，避免宿主 ESM 配置改变脚本含义）、`scripts/`、`references/`、`SKILL.md` 和 `LICENSE`。
 
 生成及视频查询需要环境变量 `ARK_API_KEY`；安装不包含付费调用授权。密钥注入、预检边界、输入输出路径和失败恢复统一见[任务规则](references/jobs.md)。
+
+录音转写使用独立的 `VOLCENGINE_SPEECH_API_KEY`，或旧版语音应用 ID／Token；不会自动复用 Ark Key。支持音频 URL、异步查询及 TXT／SRT 导出；本地文件须先托管，详见[语音识别](references/speech-recognition.md)。
 
 在用户任务目录用技能入口的绝对路径检查安装：
 
@@ -19,6 +21,7 @@ node "<技能目录>/scripts/ark-media.js" models
 
 | 需求 | 动作与文档 |
 | --- | --- |
+| 音频转写、查询、离线导出 | `audio-transcribe`／`audio-query`／`audio-export`；[语音识别](references/speech-recognition.md) |
 | 图片生成、参考图编辑、组图 | `image`；[图片参数](references/seedream-image.md) |
 | 视频创建 | `video-create`；[Seedance 2.0](references/seedance-2.0.md)／[Seedance 2.5](references/seedance-2.5.md) |
 | 已有视频进度、成品或补下载 | `video-query`；[视频取回](references/jobs.md#视频取回) |

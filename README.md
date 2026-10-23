@@ -7,7 +7,7 @@ dsaco 个人维护的 [Agent Skills 集合](https://github.com/dsaco/agent-skill
 | Skill | 能力 | 要求 |
 | --- | --- | --- |
 | [fal-ai](skills/fal-ai/SKILL.md) | 图片生成、编辑、去背景、深度／姿态提取及任务恢复 | Node.js 22+，无 npm 依赖 |
-| [volcengine-ark-media](skills/volcengine-ark-media/SKILL.md) | Seedream 图片、Seedance 2.0／2.5 视频及补下载 | Node.js 22+，无 npm 依赖 |
+| [volcengine-ark-media](skills/volcengine-ark-media/SKILL.md) | Seedream 图片、Seedance 2.0／2.5 视频及补下载、豆包录音转写与字幕导出 | Node.js 22+，无 npm 依赖 |
 | [dashscope-tts](skills/dashscope-tts/SKILL.md) | 百炼非流式语音合成与补下载 | Node.js 22+，无 npm 依赖 |
 | [qiniu](skills/qiniu/SKILL.md) | 本地文件上传七牛并返回访问 URL | Node.js 22+，真实上传需官方 qiniu SDK |
 | [exe-dev](skills/exe-dev/SKILL.md) | exe.dev 部署排障、权限、集成与计费咨询 | 文档型；实际操作需账户、SSH 与授权 |
@@ -35,6 +35,8 @@ npx skills add dsaco/agent-skills --skill strudel-music
 
 直接从上游安装，安装副本不纳入 Git。本仓库的 `skills/` 采用自维护目录白名单，以下第三方技能都保持忽略。下面是用户级命令；项目级去掉 `-g`。**`-g` 写入实际用户级技能目录，不是当前工作目录。** 安装后核对实际目录，同一宿主只保留一份加载中的副本；清理旧副本前先比较内容和依赖。
 
+新增或调整第三方技能时，在本节登记技能名称、用途、上游来源、安装／更新入口和认证方式；需要环境变量的，同时维护下方配置清单与 `.env.example`。登记不将第三方源码或登录状态加入本仓库。
+
 ```sh
 npx skills add tencentcloudbase/cloudbase-skills --skill cloudbase -g
 npx skills add vercel-labs/skills --skill find-skills -g
@@ -50,17 +52,41 @@ npx skills add mattpocock/skills --skill writing-for-agents -g
 
 [BrowserSkill](https://github.com/Tencent/BrowserSkill)：通过 `bsk` CLI 和 Chrome／Edge 扩展复用浏览器登录，支持 macOS／Windows／Linux；安装见[官方指南](https://github.com/Tencent/BrowserSkill/blob/main/AGENT_INSTALL.md)。
 
+### 小云雀
+
+以下三个第三方技能随 [`@pippit-dev/cli`](https://www.npmjs.com/package/@pippit-dev/cli) 分发，上游仓库为 [Pippit-dev/cli](https://github.com/Pippit-dev/cli)。需要 Node.js 16+；具体命令和能力以安装版本的帮助及各技能 `SKILL.md` 为准。
+
+| Skill | 用途 | 认证 |
+| --- | --- | --- |
+| `xyq-skill` | 图片／视频生成与编辑、超分、擦字幕、Canvas 画布及结果查询 | 共用 CLI 登录态 |
+| `xyq-short-drama-skill` | 剧本创作与解析、角色／场景、故事版、短剧生成及会话续接 | 共用 CLI 登录态 |
+| `xyq-marketing-skill` | 商品图文生成剧情广告、品牌大片或达人带货视频，查询与下载营销成片 | 共用 CLI 登录态 |
+
+```sh
+# 首次安装：默认同时安装 CLI 与全局 Skills
+npm install -g @pippit-dev/cli@latest
+# 更新 CLI 和随附 Skills
+pippit-tool-cli update
+# 浏览器授权与本机登录状态检查
+pippit-tool-cli login
+pippit-tool-cli status
+```
+
+已有可用版本时直接复用；安装／更新会写入全局技能目录，可能覆盖本地修改，执行前先核对现有副本。三个技能共用登录授权，普通使用无需手填 Key；自动化环境可选 `XYQ_ACCESS_KEY`，它优先于网页登录，无效时不会自动回退。个人／团队空间沿用用户指定或已保存的选择，登录成功不代表所选空间有会员、积分或模型权限。
+
 ## 环境变量
 
-在本地 `.env` 或启动环境中配置实际使用的服务；`.env` **只在本机保存，被 Git 忽略，不随仓库同步**。变量清单：
+按 [.env.example](.env.example) 在本地 `.env` 或启动环境中配置实际使用的服务；已有 `.env` 时仅补充所需条目。`.env` **只在本机保存，被 Git 忽略，不随仓库同步**。变量清单：
 
 | 服务 | 配置项 |
 | --- | --- |
 | fal.ai | `FAL_KEY` |
 | 火山方舟 | `ARK_API_KEY` |
+| 豆包语音识别 | `VOLCENGINE_SPEECH_API_KEY`，或旧版 `VOLCENGINE_SPEECH_APP_ID` + `VOLCENGINE_SPEECH_ACCESS_TOKEN` |
 | 百炼 | `DASHSCOPE_API_KEY` |
 | 七牛 | `QINIU_ACCESS_KEY`、`QINIU_SECRET_KEY`、`QINIU_BUCKET`、`QINIU_DOMAIN`，上传时四项齐全；域名须为 HTTPS |
 | ElevenLabs（第三方三个音频技能） | `ELEVENLABS_API_KEY` |
+| 小云雀（第三方三个创作技能） | 默认使用 CLI 浏览器登录；自动化环境可选 `XYQ_ACCESS_KEY`，优先于网页登录 |
 
 exe-dev 使用已有 SSH 认证，无固定环境变量。其余第三方技能的认证按上游说明，不预设通用 Key。
 

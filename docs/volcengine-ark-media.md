@@ -1,5 +1,13 @@
 # volcengine-ark-media 来源与验证
 
+## 豆包录音识别 2.0 增量验证
+
+新增 `audio-transcribe`、`audio-query`、`audio-export`，使用独立豆包语音凭据、标准版 URL 输入、提交前保存 UUID、单次查询及 TXT／SRT 导出。官方接口与计费依据、使用边界见[语音识别](../skills/volcengine-ark-media/references/speech-recognition.md)。无上传功能，也不将方舟 Key 自动当作语音 Key。
+
+Windows / Node.js 24.19.0：技能离线测试 18 项通过，仓库结构与分发检查 8 项通过。新增语音用例覆盖空提交响应、异步状态、新旧鉴权、重复提交保护、未知提交恢复、错误脱敏、毫秒时间戳、离线重导出及保留已有文本；测试均为假凭据、临时目录和 fetch 替身。既有测试的 NODE_OPTIONS 预加载路径改为正斜杠，以兼容 Windows。
+
+Node.js 24.7.0 下测试进程出现原生崩溃（退出码 3221226505），未将该运行时认定为验收通过；使用 24.19.0 验证不代表已修复旧版本。通用 quick_validate 工具不接受本仓库原有的 `compatibility` 元数据字段，保留独立分发约定并由仓库测试校验元数据和引用。未验证真实账户权限、实际转写质量、字幕同步、Node.js 22 或新语音分支在 macOS 的行为。未执行付费请求。
+
 ## 范围与来源
 
 按用户要求将本地已安装的 `volcengine-ark-media` 整理为独立可分发 Skill，保持目录名和元数据名称一致。用户口头简称为 volcengine-ark；未另建同能力别名 Skill。

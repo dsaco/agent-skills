@@ -1,7 +1,7 @@
 ---
 name: volcengine-ark-media
-description: 火山方舟媒体：用于 Seedream 图片生成、参考图编辑与组图，Seedance 视频生成与多模态参考，已有视频任务查询及图片／视频补下载；也供素材技能调用。
-compatibility: Node.js 22+；生成和视频查询需要环境变量 ARK_API_KEY；无 npm 依赖。
+description: 火山媒体：用于 Seedream 图片生成、参考图编辑与组图，Seedance 视频生成与多模态参考，已有任务查询及媒体补下载，以及豆包音频转文字、TXT／SRT 导出；也供素材技能调用。
+compatibility: Node.js 22+；图片／视频使用 ARK_API_KEY，语音识别使用独立的豆包语音凭据；无 npm 依赖。
 ---
 
 # Volcengine Ark Media
@@ -12,6 +12,7 @@ compatibility: Node.js 22+；生成和视频查询需要环境变量 ARK_API_KEY
 
 | 需求 | 必读文档 | 执行路径与结束条件 |
 | --- | --- | --- |
+| 音频转文字、识别结果查询或字幕导出 | [语音识别](references/speech-recognition.md) | `audio-transcribe` → `audio-query`；已有成功结果用 `audio-export` 离线导出 TXT／SRT |
 | 图片生成、编辑、组图 | [图片参数](references/seedream-image.md)及[任务规则](references/jobs.md) | `image` → 下方新生成流程 |
 | 视频生成、图生视频、多模态参考 | 按模型读 [2.0 参数](references/seedance-2.0.md)或 [2.5 参数](references/seedance-2.5.md)，并读[任务规则](references/jobs.md) | `video-create` → 下方新生成流程 |
 | 已有视频进度、成品或补下载 | [视频取回](references/jobs.md#视频取回) | 复用 task id 执行 `video-query`；只查进度则查询一次后报告，取成品则按轮询预算处理并验收 |

@@ -9,6 +9,9 @@ const ACTIONS = {
   'image-download': { script: 'download-images.js', args: [] },
   'video-create': { script: 'create-video.js', args: [] },
   'video-query': { script: 'query-video.js', args: [] },
+  'audio-transcribe': { script: 'recognize-audio.js', args: ['submit'] },
+  'audio-query': { script: 'recognize-audio.js', args: ['query'] },
+  'audio-export': { script: 'recognize-audio.js', args: ['export'] },
   models: { script: 'generate-image.js', args: ['--list-models'] },
 };
 
@@ -20,6 +23,9 @@ function printHelp(stream = process.stdout) {
   stream.write(`  ark-media.js video-query [video query options]\n`);
   stream.write(`  ark-media.js models\n\n`);
   stream.write(`Actions:\n`);
+  stream.write(`  audio-transcribe Submit a recording URL for Doubao Speech 2.0 transcription.\n`);
+  stream.write(`  audio-query   Query a saved Speech job once and export TXT/SRT on success.\n`);
+  stream.write(`  audio-export  Export TXT/SRT from a saved successful result, offline.\n`);
   stream.write(`  image         Generate or edit Seedream images synchronously and download results.\n`);
   stream.write(`  image-download Download images from a saved response, without generation or API key.\n`);
   stream.write(`  video-create  Create an asynchronous Seedance 2.0/2.5 video task.\n`);

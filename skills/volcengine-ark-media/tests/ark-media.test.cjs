@@ -32,7 +32,7 @@ global.fetch = async (url, options = {}) => {
 `);
   function run(args, result, mode = '', cli = path.join(root, 'scripts/ark-media.js')) {
     const env = { PATH: process.env.PATH, HOME: tmp, USERPROFILE: tmp,
-      NODE_OPTIONS: `--require="${mock}"`, MOCK_MODE: mode };
+      NODE_OPTIONS: `--require="${mock.replace(/\\/g, '/')}"`, MOCK_MODE: mode };
     if (result !== undefined) { env.ARK_API_KEY = 'test-key-not-real'; env.MOCK_RESULT = JSON.stringify(result); }
     else if (mode !== 'download') env.NO_NETWORK = '1';
     return spawnSync(process.execPath, [cli, ...args], { cwd, env, encoding: 'utf8', timeout: 10000 });
@@ -40,6 +40,123 @@ global.fetch = async (url, options = {}) => {
   return { tmp, cwd, run, calls: () => fs.readFileSync(path.join(cwd, 'calls.txt'), 'utf8').trim().split('\n').map(JSON.parse) };
 }
 const ok = result => assert.equal(result.status, 0, result.stderr);
+
+function speechWorkspace(t) {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'speech-offline-'));
+  t.after(() => fs.rmSync(tmp, { recursive: true, force: true }));
+  const cwd = path.join(tmp, '音频 工作区'); fs.mkdirSync(cwd);
+  const mock = path.join(tmp, 'mock.cjs');
+  fs.writeFileSync(mock, `
+const fs = require('node:fs');
+global.fetch = async (url, options) => {
+  if (process.env.NO_NETWORK) throw new Error('Unexpected network request');
+  if (!String(url).startsWith('https://openspeech.bytedance.com/api/v3/auc/bigmodel/')) throw new Error('Wrong Speech host');
+  if (options.redirect !== 'error' || !options.signal || options.method !== 'POST') throw new Error('Unsafe request');
+  const h = options.headers;
+  if (h.Authorization || h['X-Api-Resource-Id'] !== 'volc.seedasr.auc') throw new Error('Wrong credentials or resource');
+  if (process.env.LEGACY) {
+    if (h['X-Api-App-Key'] !== 'fake-app' || h['X-Api-Access-Key'] !== 'fake-token' || h['X-Api-Key']) throw new Error('Wrong legacy auth');
+  } else if(h['X-Api-Key'] !== 'fake-speech-key') throw new Error('Wrong Speech key');
+  fs.appendFileSync('calls.jsonl', JSON.stringify({url, id:h['X-Api-Request-Id'], body:JSON.parse(options.body)}) + '\\n');
+  if(String(url).endsWith('/submit')) {
+    const job=JSON.parse(fs.readFileSync('job/job.json','utf8'));
+    if(job.requestId !== h['X-Api-Request-Id'] || job.state !== 'submitting' || h['X-Api-Sequence'] !== '-1') throw new Error('ID was not persisted before submission');
+  }
+  if(process.env.MODE === 'timeout') throw new Error('timeout fake-speech-key fake-token fake-ark-key');
+  const headers = {'X-Api-Status-Code':process.env.CODE || '20000000','X-Api-Message':process.env.MODE === 'error' ? 'fake-speech-key fake-token fake-ark-key' : 'OK'};
+  return new Response(process.env.BODY || '', {status:process.env.MODE === 'error' ? 403 : 200, headers});
+};
+`);
+  const run = (args, { key = true, mode = '', code = '20000000', body = '', legacy = false, cli = path.join(root, 'scripts/ark-media.js') } = {}) => {
+    const env = { PATH: process.env.PATH, HOME: tmp, USERPROFILE: tmp, NODE_OPTIONS: `--require="${mock.replace(/\\/g, '/')}"`,
+      ARK_API_KEY: 'fake-ark-key', MODE: mode, CODE: code, BODY: typeof body === 'string' ? body : JSON.stringify(body) };
+    if (legacy) { env.LEGACY = '1'; env.VOLCENGINE_SPEECH_APP_ID = 'fake-app'; env.VOLCENGINE_SPEECH_ACCESS_TOKEN = 'fake-token'; }
+    else if (key) env.VOLCENGINE_SPEECH_API_KEY = 'fake-speech-key';
+    else env.NO_NETWORK = '1';
+    return spawnSync(process.execPath, [cli, ...args], { cwd, env, encoding: 'utf8', timeout: 10000 });
+  };
+  return { tmp, cwd, run, calls: () => fs.readFileSync(path.join(cwd, 'calls.jsonl'), 'utf8').trim().split('\n').map(JSON.parse) };
+}
+const speechSubmit = ['audio-transcribe', '--audio-url', 'https://audio.invalid/recording.mp3?signature=private', '--out-dir', 'job'];
+const speechQuery = ['audio-query', '--job', 'job/job.json'];
+const speechResult = { result: { text: '你好。测试。', utterances: [
+  { text: '你好。', start_time: 125, end_time: 1325 },
+  { text: '测试。', start_time: 3600000, end_time: 3601500, additions: { speaker: '1' } },
+] } };
+
+test('语音独立安装、预检不联网不落盘、不泄露音频签名；Ark Key 不作为语音 Key', t => {
+  const w = speechWorkspace(t), installed = path.join(w.tmp, '独立 技能');
+  fs.cpSync(root, installed, { recursive: true });
+  fs.writeFileSync(path.join(w.tmp, 'package.json'), '{"type":"module"}');
+  const cli = path.join(installed, 'scripts/ark-media.js');
+  ok(w.run(['audio-transcribe', '--help'], { key: false, cli }));
+  const r = w.run([...speechSubmit, '--dry-run'], { key: false, cli }); ok(r);
+  assert(!r.stdout.includes('private')); assert(!r.stdout.includes('fake-ark-key'));
+  assert.equal(JSON.parse(r.stdout).resourceId, 'volc.seedasr.auc');
+  assert.deepEqual(fs.readdirSync(w.cwd), []);
+  const missing = w.run(speechSubmit, { key: false });
+  assert.notEqual(missing.status, 0); assert.match(missing.stderr, /VOLCENGINE_SPEECH_API_KEY/);
+  assert.deepEqual(fs.readdirSync(w.cwd), []);
+  for (const extra of [['--format', 'mp4'], ['--unknown', 'x'], ['--audio-url', 'file:///local.wav']]) {
+    assert.notEqual(w.run([...speechSubmit, ...extra, '--dry-run'], { key: false }).status, 0);
+  }
+});
+
+test('语音空提交响应正常；异步状态、同任务查询及毫秒 SRT；成功结果离线恢复', t => {
+  const w = speechWorkspace(t);
+  ok(w.run([...speechSubmit, '--speakers', '--language', 'zh-CN']));
+  const calls = w.calls(), first = calls[0];
+  assert.equal(first.body.request.enable_ddc, false); assert.equal(first.body.request.enable_speaker_info, true);
+  assert.equal(first.body.audio.language, 'zh-CN');
+  assert.notEqual(w.run(speechSubmit).status, 0); assert.equal(w.calls().length, 1);
+  for (const [code, state] of [['20000002', 'queued'], ['20000001', 'processing']]) {
+    const r = w.run(speechQuery, { code }); ok(r); assert.equal(JSON.parse(r.stdout).state, state);
+    assert(!fs.existsSync(path.join(w.cwd, 'job/transcript.txt')));
+  }
+  ok(w.run(speechQuery, { body: speechResult }));
+  assert(w.calls().every(call => call.id === first.id));
+  assert.deepEqual(w.calls()[1].body, {});
+  const srt = fs.readFileSync(path.join(w.cwd, 'job/transcript.srt'), 'utf8');
+  assert.equal(srt, '1\n00:00:00,125 --> 00:00:01,325\n你好。\n\n2\n01:00:00,000 --> 01:00:01,500\n测试。\n');
+  assert.equal(fs.readFileSync(path.join(w.cwd, 'job/transcript.txt'), 'utf8'), '你好。测试。\n');
+  ok(w.run(['audio-export', '--result', 'job/result.json', '--out-dir', '离线 导出'], { key: false }));
+  assert.equal(fs.readFileSync(path.join(w.cwd, '离线 导出/transcript.srt'), 'utf8'), srt);
+  assert.equal(w.calls().length, 4);
+});
+
+test('语音提交超时保留 UUID，重提被阻止，查询原 ID 恢复；错误日志和落盘脱敏', t => {
+  const w = speechWorkspace(t);
+  const failed = w.run(speechSubmit, { mode: 'timeout' });
+  assert.notEqual(failed.status, 0); assert.match(failed.stderr, /do not resubmit/);
+  assert(!failed.stderr.includes('fake-speech-key')); assert(!failed.stderr.includes('fake-ark-key'));
+  const job = JSON.parse(fs.readFileSync(path.join(w.cwd, 'job/job.json')));
+  assert.equal(job.state, 'unknown');
+  assert.notEqual(w.run(speechSubmit).status, 0); assert.equal(w.calls().length, 1);
+  const denied = w.run(speechQuery, { mode: 'error', body: 'fake-speech-key fake-ark-key' });
+  assert.notEqual(denied.status, 0);
+  const saved = fs.readFileSync(path.join(w.cwd, 'job/query.json'), 'utf8');
+  assert(!saved.includes('fake-speech-key')); assert(!saved.includes('fake-ark-key'));
+  ok(w.run(speechQuery, { body: speechResult }));
+  assert(w.calls().every(call => call.id === job.requestId));
+});
+
+test('语音旧版鉴权、服务错误、非法 JSON 和非法时间戳不冒充成功；原响应保留', t => {
+  const w = speechWorkspace(t);
+  ok(w.run(speechSubmit, { legacy: true }));
+  for (const code of ['20000003', '45000001', '55000031']) {
+    assert.notEqual(w.run(speechQuery, { code, legacy: true }).status, 0);
+  }
+  assert.notEqual(w.run(speechQuery, { body: 'invalid-json', legacy: true }).status, 0);
+  const bad = { result: { text: '坏时间', utterances: [{ text: '坏时间', start_time: 2000, end_time: 1000 }] } };
+  assert.notEqual(w.run(speechQuery, { body: bad, legacy: true }).status, 0);
+  assert(fs.existsSync(path.join(w.cwd, 'job/result.json')));
+  assert(!fs.existsSync(path.join(w.cwd, 'job/transcript.srt')));
+  ok(w.run(speechQuery, { body: { result: { text: '仅文本' } }, legacy: true }));
+  assert(!fs.existsSync(path.join(w.cwd, 'job/transcript.srt')));
+  fs.writeFileSync(path.join(w.cwd, 'job/transcript.txt'), '用户编辑');
+  assert.notEqual(w.run(speechQuery, { body: speechResult, legacy: true }).status, 0);
+  assert.equal(fs.readFileSync(path.join(w.cwd, 'job/transcript.txt'), 'utf8'), '用户编辑');
+});
 
 test('独立复制到中文空格目录，在 ESM 宿主下运行 help/models/dry-run，无 Key/网络/输出', t => {
   const w = workspace(t), installed = path.join(w.tmp, '技能 安装');
