@@ -4,7 +4,7 @@
 
 ## 能力与运行环境
 
-- 图片生成／编辑：Nano Banana、Nano Banana 2、Nano Banana Pro、GPT Image 2、GPT Image 2.5 Flare／Sunburst。
+- 图片生成／编辑：默认 GPT Image 2.5 Flare；也支持显式选择 Nano Banana、Nano Banana 2、Nano Banana Pro、GPT Image 2、GPT Image 2.5 Sunburst。
 - 去背景：BiRefNet v2、Ideogram。
 - 结构图：Depth Anything V2、DWPose。
 - 队列任务：提交、状态、取回、补下载、取消；不自动重提或切换模型。

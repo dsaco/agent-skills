@@ -10,7 +10,7 @@ const nano2 = { ...pro, 'aspect-ratio': ['aspect_ratio', [...autoRatios, '4:1', 
 const gpt = { ...common, 'image-size': ['image_size', 'image-size'], background: ['background', ['auto', 'transparent', 'opaque']], quality: ['quality', ['auto', 'low', 'medium', 'high']] };
 const gpt25 = { ...gpt, quality: ['quality', ['auto', 'low', 'medium', 'high', 'xhigh', 'max']], 'output-compression': ['output_compression', 'compression'] };
 export const defaults = {
-  'text-to-image': 'fal-ai/nano-banana-2', 'image-to-image': 'fal-ai/nano-banana-2/edit', 'remove-background': 'fal-ai/birefnet/v2',
+  'text-to-image': 'openai/gpt-image-2.5/flare/text-to-image', 'image-to-image': 'openai/gpt-image-2.5/flare/edit', 'remove-background': 'fal-ai/birefnet/v2',
   'image-to-depth': 'fal-ai/image-preprocessors/depth-anything/v2', 'image-to-pose': 'fal-ai/dwpose',
 };
 export const models = {};

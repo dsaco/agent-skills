@@ -99,8 +99,8 @@ export async function exercise(directory) {
 
 test('所有端点最小请求与显式参数，拒绝跨模型误用', async () => {
   assert.deepEqual(buildInput('text-to-image', { prompt: 'hello' }).input, { prompt: 'hello' });
-  assert.equal(buildInput('text-to-image', { prompt: 'hello', seed: '0', 'limit-generations': 'false' }).input.seed, 0);
-  assert.equal(buildInput('image-to-image', { prompt: 'hello', image: ['x'], 'limit-generations': 'false' }).input.limit_generations, false);
+  assert.equal(buildInput('text-to-image', { model: 'fal-ai/nano-banana-2', prompt: 'hello', seed: '0', 'limit-generations': 'false' }).input.seed, 0);
+  assert.equal(buildInput('image-to-image', { model: 'fal-ai/nano-banana-2/edit', prompt: 'hello', image: ['x'], 'limit-generations': 'false' }).input.limit_generations, false);
   for (const [endpoint, model] of Object.entries(models)) {
     const task = model.task;
     for (const [name, [field, type]] of Object.entries(model.options)) {

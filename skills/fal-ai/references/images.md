@@ -2,15 +2,15 @@
 
 ## 模型与端点
 
-自然语言选型：完全未指定模型时用 Nano Banana 2；只说“2.5”、“gpt 2.5”或“GPT Image 2.5”时用 Flare；明确指定 Sunburst 时用 Sunburst。根据任务从下表选生成或编辑端点，通过 `--model` 传完整值。
+自然语言选型：未指定模型时，文生图和参考图编辑均用 GPT Image 2.5 Flare；只说“2.5”、“gpt 2.5”或“GPT Image 2.5”时也用 Flare。用户明确指定其他模型时按指定执行。根据任务从下表选生成或编辑端点，通过 `--model` 传完整值；省略 `--model` 时脚本同样默认 Flare。
 
 | 模型 | text-to-image 端点 | image-to-image 端点 |
 | --- | --- | --- |
 | Nano Banana 初代 | `fal-ai/nano-banana` | `fal-ai/nano-banana/edit` |
-| Nano Banana 2（默认） | `fal-ai/nano-banana-2` | `fal-ai/nano-banana-2/edit` |
+| Nano Banana 2 | `fal-ai/nano-banana-2` | `fal-ai/nano-banana-2/edit` |
 | Nano Banana Pro | `fal-ai/nano-banana-pro` | `fal-ai/nano-banana-pro/edit` |
 | GPT Image 2 | `openai/gpt-image-2` | `openai/gpt-image-2/edit` |
-| GPT Image 2.5 Flare | `openai/gpt-image-2.5/flare/text-to-image` | `openai/gpt-image-2.5/flare/edit` |
+| GPT Image 2.5 Flare（默认） | `openai/gpt-image-2.5/flare/text-to-image` | `openai/gpt-image-2.5/flare/edit` |
 | GPT Image 2.5 Sunburst | `openai/gpt-image-2.5/sunburst/text-to-image` | `openai/gpt-image-2.5/sunburst/edit` |
 
 ## 通用参数
