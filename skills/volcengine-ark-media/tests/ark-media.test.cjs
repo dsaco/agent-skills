@@ -41,6 +41,100 @@ global.fetch = async (url, options = {}) => {
 }
 const ok = result => assert.equal(result.status, 0, result.stderr);
 
+function ttsWorkspace(t) {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'tts-offline-'));
+  t.after(() => fs.rmSync(tmp, { recursive: true, force: true }));
+  const cwd = path.join(tmp, '配音 工作区'); fs.mkdirSync(cwd);
+  const preload = path.join(tmp, 'mock.cjs');
+  fs.writeFileSync(preload, `
+const fs=require('node:fs'), assert=require('node:assert/strict');
+global.fetch=async(url,opts)=>{
+ if(process.env.NO_NETWORK) throw new Error('Network forbidden');
+ assert.equal(url,'https://openspeech.bytedance.com/api/v3/tts/unidirectional');
+ assert.equal(opts.redirect,'error'); assert(opts.signal); assert.equal(opts.method,'POST');
+ assert.equal(opts.headers['X-Api-Resource-Id'],'seed-tts-2.0');
+ if(process.env.LEGACY){assert.equal(opts.headers['X-Api-App-Id'],'fake-app');assert.equal(opts.headers['X-Api-Access-Key'],'fake-token');assert(!opts.headers['X-Api-App-Key']);}
+ else assert.equal(opts.headers['X-Api-Key'],'fake-speech-key');
+ const job=JSON.parse(fs.readFileSync('job/request.json','utf8'));
+ assert.equal(job.state,'submitting');assert.equal(job.requestId,opts.headers['X-Api-Request-Id']);
+ fs.appendFileSync('calls.jsonl',opts.body+'\\n');
+ const mode=process.env.MODE;
+ if(mode==='timeout') throw new Error('timeout fake-speech-key');
+ if(mode==='http') return new Response('private',{status:403,headers:{'X-Api-Message':'fake-speech-key'}});
+ const request=JSON.parse(opts.body), pcm=request.req_params.audio_params.format==='pcm';
+ const audio=Buffer.from(pcm ? [0,0,1,0,255,255,0,0] : [73,68,51,4,0,0,0,0,0,0,255,251,1,2]);
+ const events=[{code:0,data:audio.subarray(0,3).toString('base64')},{code:0,sentence:{text:'中文分片'}},{code:0,data:audio.subarray(3).toString('base64')}];
+ if(mode==='invalid-base64') events[0].data='!!!';
+ if(mode==='bad-audio') events.splice(0,events.length,{code:0,data:Buffer.from('not-audio').toString('base64')});
+ if(mode==='empty') events.length=0;
+ if(mode==='service') events.push({code:45000000,message:'denied fake-speech-key'});
+ else if(mode!=='partial') events.push({code:20000000,message:'ok',usage:{text_words:6}});
+ if(mode==='export-failure') fs.writeFileSync('job/speech.mp3.part','keep-existing');
+ const bytes=Buffer.from(mode==='invalid-json' ? '{not-json}' : events.map(e=>JSON.stringify(e)).join('\\r\\n'));
+ return new Response(new ReadableStream({start(controller){for(let i=0;i<bytes.length;i+=7)controller.enqueue(bytes.subarray(i,i+7));controller.close();}}),{headers:{'Content-Type':'application/json','X-Tt-Logid':'fake-log'}});
+};
+`);
+  const run = (args, { mode = '', key = true, legacy = false, cli = path.join(root, 'scripts/ark-media.js') } = {}) => {
+    const env = { PATH: process.env.PATH, HOME: tmp, USERPROFILE: tmp, MODE: mode, NODE_OPTIONS: `--require="${preload.replace(/\\/g, '/')}"` };
+    if (legacy) { env.LEGACY='1'; env.VOLCENGINE_SPEECH_APP_ID='fake-app'; env.VOLCENGINE_SPEECH_ACCESS_TOKEN='fake-token'; }
+    else if (key) env.VOLCENGINE_SPEECH_API_KEY='fake-speech-key';
+    else { env.ARK_API_KEY='fake-ark-key'; env.NO_NETWORK='1'; }
+    return spawnSync(process.execPath, [cli,...args], {cwd,env,encoding:'utf8',timeout:10000});
+  };
+  return { tmp, cwd, run };
+}
+const ttsArgs = ['audio-synthesize','--text','你好，世界。','--speaker','fixture_voice_2','--out-dir','job'];
+
+test('TTS 独立安装及参数预检无网络产物；文本文件原样、语气和音频参数映射', t => {
+  const w=ttsWorkspace(t), installed=path.join(w.tmp,'独立 安装');fs.cpSync(root,installed,{recursive:true});
+  fs.writeFileSync(path.join(w.tmp,'package.json'),'{"type":"module"}');
+  const cli=path.join(installed,'scripts/ark-media.js');
+  ok(w.run(['audio-synthesize','--help'],{key:false,cli}));
+  const r=w.run([...ttsArgs,'--format','wav','--speech-rate=-25','--loudness-rate','20','--instruction','温和一些','--dry-run'],{key:false,cli});ok(r);
+  const data=JSON.parse(r.stdout);assert.equal(data.resourceId,'seed-tts-2.0');
+  assert.deepEqual(data.payload.req_params.audio_params,{format:'pcm',sample_rate:24000,speech_rate:-25,loudness_rate:20});
+  assert.deepEqual(JSON.parse(data.payload.req_params.additions),{context_texts:['温和一些']});
+  assert.deepEqual(fs.readdirSync(w.cwd),[]);
+  assert.notEqual(w.run(ttsArgs,{key:false}).status,0);assert.deepEqual(fs.readdirSync(w.cwd),[]);
+  fs.writeFileSync(path.join(w.cwd,'文案.txt'),'第一行\n第二行');
+  const file=w.run(['audio-synthesize','--text-file','文案.txt','--speaker','fixture_voice_2','--out-dir','job','--dry-run'],{key:false});ok(file);
+  assert.equal(JSON.parse(file.stdout).payload.req_params.text,'第一行\n第二行');
+  for(const extra of [['--text-file','文案.txt'],['--format','bad'],['--sample-rate','123'],['--speech-rate','101'],['--instruction',''],['--speaker','bad voice'],['--unknown','x']]) assert.notEqual(w.run([...ttsArgs,...extra,'--dry-run'],{key:false}).status,0);
+});
+
+test('TTS 分片 JSON/UTF-8/Base64 合并，成功后导出 MP3；离线恢复且不重复提交', t => {
+  const w=ttsWorkspace(t);ok(w.run(ttsArgs));
+  const file=path.join(w.cwd,'job/speech.mp3');assert.equal(fs.readFileSync(file).length,14);
+  const job=JSON.parse(fs.readFileSync(path.join(w.cwd,'job/request.json')));assert.equal(job.state,'succeeded');assert.equal(job.usage.text_words,6);
+  assert.notEqual(w.run(ttsArgs).status,0);assert.equal(fs.readFileSync(path.join(w.cwd,'calls.jsonl'),'utf8').trim().split('\n').length,1);
+  const before=fs.readFileSync(path.join(w.cwd,'job/events.jsonl'),'utf8');
+  ok(w.run(['audio-recover','--job','job/request.json','--out-dir','恢复','--dry-run'],{key:false}));assert(!fs.existsSync(path.join(w.cwd,'恢复')));
+  ok(w.run(['audio-recover','--job','job/request.json','--out-dir','恢复'],{key:false}));
+  assert.deepEqual(fs.readFileSync(path.join(w.cwd,'恢复/speech.mp3')),fs.readFileSync(file));
+  assert.equal(fs.readFileSync(path.join(w.cwd,'job/events.jsonl'),'utf8'),before);
+});
+
+test('TTS 旧版 App-Id 鉴权和 PCM→WAV 单头封装，采样率与长度正确', t => {
+  const w=ttsWorkspace(t);ok(w.run([...ttsArgs,'--format','wav','--sample-rate','48000'],{legacy:true}));
+  const b=fs.readFileSync(path.join(w.cwd,'job/speech.wav'));assert.equal(b.toString('ascii',0,4),'RIFF');
+  assert.equal(b.readUInt32LE(24),48000);assert.equal(b.readUInt16LE(22),1);assert.equal(b.readUInt16LE(34),16);
+  assert.equal(b.readUInt32LE(40),8);assert.equal(b.length,52);
+});
+
+test('TTS 不完整流、服务失败、坏 JSON/音频不交付；已完整接收可离线恢复导出失败', t => {
+  for(const mode of ['partial','service','invalid-json','invalid-base64','bad-audio','empty','timeout','http','export-failure']) {
+    const w=ttsWorkspace(t), r=w.run(ttsArgs,{mode});assert.notEqual(r.status,0,mode);assert(!r.stderr.includes('fake-speech-key'));
+    assert(!fs.existsSync(path.join(w.cwd,'job/speech.mp3')));
+    assert.notEqual(w.run(ttsArgs).status,0);
+    const recovered=w.run(['audio-recover','--job','job/request.json','--out-dir','恢复'],{key:false});
+    if(mode==='export-failure') {ok(recovered);assert.equal(fs.readFileSync(path.join(w.cwd,'job/speech.mp3.part'),'utf8'),'keep-existing');}
+    else assert.notEqual(recovered.status,0,mode);
+    for(const f of ['request.json','response.json','events.jsonl']) {
+      const p=path.join(w.cwd,'job',f);if(fs.existsSync(p))assert(!fs.readFileSync(p,'utf8').includes('fake-speech-key'));
+    }
+  }
+});
+
 function speechWorkspace(t) {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'speech-offline-'));
   t.after(() => fs.rmSync(tmp, { recursive: true, force: true }));

@@ -87,6 +87,7 @@ test('Ark 独立分发白名单、CommonJS 边界、许可与相对引用', asyn
     'references/jobs.md', 'references/prompt-guide.md', 'references/seedance-2.0.md', 'references/seedance-2.5.md', 'references/seedream-image.md',
     'scripts/ark-media.js', 'scripts/create-video.js', 'scripts/generate-image.js', 'scripts/download-images.js',
     'scripts/query-video.js', 'scripts/runtime.js', 'scripts/recognize-audio.js', 'references/speech-recognition.md', 'tests/ark-media.test.cjs',
+    'scripts/synthesize-speech.js', 'references/speech-synthesis.md',
   ].sort();
   assert.deepEqual(await files(ark), allowed);
   assert.equal(await readFile(path.join(ark, 'LICENSE'), 'utf8'), await readFile(path.join(root, 'LICENSE'), 'utf8'));

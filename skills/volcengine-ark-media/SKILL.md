@@ -1,7 +1,7 @@
 ---
 name: volcengine-ark-media
-description: 火山媒体：用于 Seedream 图片生成、参考图编辑与组图，Seedance 视频生成与多模态参考，已有任务查询及媒体补下载，以及豆包音频转文字、TXT／SRT 导出；也供素材技能调用。
-compatibility: Node.js 22+；图片／视频使用 ARK_API_KEY，语音识别使用独立的豆包语音凭据；无 npm 依赖。
+description: 火山媒体：用于 Seedream 图片生成、参考图编辑与组图，Seedance 视频生成与多模态参考，已有任务查询及媒体补下载，豆包音频转文字、TXT／SRT 导出，以及语音合成 2.0 文字配音与音频恢复；也供素材技能调用。
+compatibility: Node.js 22+；图片／视频使用 ARK_API_KEY，语音识别及合成使用独立的豆包语音凭据；无 npm 依赖。
 ---
 
 # Volcengine Ark Media
@@ -12,6 +12,7 @@ compatibility: Node.js 22+；图片／视频使用 ARK_API_KEY，语音识别使
 
 | 需求 | 必读文档 | 执行路径与结束条件 |
 | --- | --- | --- |
+| 文字生成配音、调整语速／语气、从已存响应恢复音频 | [语音合成](references/speech-synthesis.md) | `audio-synthesize` 预检、单次提交、保存音频并验收；已有完整响应用 `audio-recover` |
 | 音频转文字、识别结果查询或字幕导出 | [语音识别](references/speech-recognition.md) | `audio-transcribe` → `audio-query`；已有成功结果用 `audio-export` 离线导出 TXT／SRT |
 | 图片生成、编辑、组图 | [图片参数](references/seedream-image.md)及[任务规则](references/jobs.md) | `image` → 下方新生成流程 |
 | 视频生成、图生视频、多模态参考 | 按模型读 [2.0 参数](references/seedance-2.0.md)或 [2.5 参数](references/seedance-2.5.md)，并读[任务规则](references/jobs.md) | `video-create` → 下方新生成流程 |

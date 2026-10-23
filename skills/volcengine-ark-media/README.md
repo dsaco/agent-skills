@@ -1,14 +1,16 @@
 # volcengine-ark-media
 
-火山方舟 Seedream 图片、Seedance 视频与豆包录音转写技能，入口见 [SKILL.md](SKILL.md)。不是火山引擎官方项目。
+火山方舟 Seedream 图片、Seedance 视频、豆包录音转写与语音合成技能，入口见 [SKILL.md](SKILL.md)。不是火山引擎官方项目。
 
 ## 安装与环境
 
 需要 Node.js 22+，无需 `npm install`。完整复制本目录，保留 `package.json`（声明 CommonJS，避免宿主 ESM 配置改变脚本含义）、`scripts/`、`references/`、`SKILL.md` 和 `LICENSE`。
 
-生成及视频查询需要环境变量 `ARK_API_KEY`；安装不包含付费调用授权。密钥注入、预检边界、输入输出路径和失败恢复统一见[任务规则](references/jobs.md)。
+图片／视频生成及视频查询需要环境变量 `ARK_API_KEY`；安装不包含付费调用授权。密钥注入、预检边界、输入输出路径和失败恢复统一见[任务规则](references/jobs.md)。
 
 录音转写使用独立的 `VOLCENGINE_SPEECH_API_KEY`，或旧版语音应用 ID／Token；不会自动复用 Ark Key。支持音频 URL、异步查询及 TXT／SRT 导出；本地文件须先托管，详见[语音识别](references/speech-recognition.md)。
+
+语音合成 2.0 复用同组豆包语音凭据，需另有 `seed-tts-2.0` 服务权限。支持预设音色、文案文件、语速／音量／语气指令及 MP3／PCM／WAV 输出；完整响应可离线恢复，详见[语音合成](references/speech-synthesis.md)。
 
 在用户任务目录用技能入口的绝对路径检查安装：
 
@@ -21,6 +23,7 @@ node "<技能目录>/scripts/ark-media.js" models
 
 | 需求 | 动作与文档 |
 | --- | --- |
+| 文字配音、离线恢复音频 | `audio-synthesize`／`audio-recover`；[语音合成](references/speech-synthesis.md) |
 | 音频转写、查询、离线导出 | `audio-transcribe`／`audio-query`／`audio-export`；[语音识别](references/speech-recognition.md) |
 | 图片生成、参考图编辑、组图 | `image`；[图片参数](references/seedream-image.md) |
 | 视频创建 | `video-create`；[Seedance 2.0](references/seedance-2.0.md)／[Seedance 2.5](references/seedance-2.5.md) |

@@ -1,5 +1,15 @@
 # volcengine-ark-media 来源与验证
 
+## 豆包语音合成 2.0 接入与验证
+
+新增 `audio-synthesize` 和 `audio-recover`，使用 `seed-tts-2.0` 的 HTTP Chunked 单向流式接口。支持 UTF-8 文案文件、预设音色、语速／音量、自然语言语气指令、MP3／PCM／WAV 输出；WAV 在本地为 PCM 封装单个文件头。官方接口依据、参数与恢复条件见[语音合成](../skills/volcengine-ark-media/references/speech-synthesis.md)。
+
+请求前保存 UUID 和文案参数，响应逐事件保存；必须有 `20000000` 完成码且音频非空才能导出。完整流可离线重新导出，不完整流不会当作成品。新版 Key 与识别共用环境变量；旧版 TTS 的 App-Id 请求头与识别的 App-Key 分开实现。未加入声音复刻、SSML、播客、实时对话或自动长文拆分。
+
+Windows / Node.js 24.19.0：技能 22 项离线测试、仓库结构与分发检查 9 项通过，共 31 项。新增用例验证跨网络块的 JSON／中文／Base64、末行无换行、新旧鉴权、WAV 字段与长度、导出失败恢复、服务错误／超时／不完整响应、空音频、非法 Base64 和密钥脱敏。离线测试全部使用假凭据、临时目录和 fetch 替身，不调用真实合成接口。
+
+2026-10-23 在 Windows 上另行实测新版语音 API Key、`seed-tts-2.0`、小天 2.0 与猴哥 2.0 预设音色的中文短句 MP3 合成，成功保存完整响应和音频，并通过 FFprobe 时长检查及 FFmpeg 完整解码。语气指令已随请求发送，但不将合成成功视为音色、情绪或逐字破音控制达标；听感仍需逐条验收。此实测不覆盖全部账户或音色、旧版鉴权、真实 PCM／WAV、长文本及其他操作系统。
+
 ## 豆包录音识别 2.0 增量验证
 
 新增 `audio-transcribe`、`audio-query`、`audio-export`，使用独立豆包语音凭据、标准版 URL 输入、提交前保存 UUID、单次查询及 TXT／SRT 导出。官方接口与计费依据、使用边界见[语音识别](../skills/volcengine-ark-media/references/speech-recognition.md)。无上传功能，也不将方舟 Key 自动当作语音 Key。

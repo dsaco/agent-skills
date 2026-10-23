@@ -7,7 +7,7 @@ dsaco 个人维护的 [Agent Skills 集合](https://github.com/dsaco/agent-skill
 | Skill | 能力 | 要求 |
 | --- | --- | --- |
 | [fal-ai](skills/fal-ai/SKILL.md) | 图片生成、编辑、去背景、深度／姿态提取及任务恢复 | Node.js 22+，无 npm 依赖 |
-| [volcengine-ark-media](skills/volcengine-ark-media/SKILL.md) | Seedream 图片、Seedance 2.0／2.5 视频及补下载、豆包录音转写与字幕导出 | Node.js 22+，无 npm 依赖 |
+| [volcengine-ark-media](skills/volcengine-ark-media/SKILL.md) | Seedream 图片、Seedance 2.0／2.5 视频及补下载、豆包录音转写／字幕导出与语音合成 2.0 配音 | Node.js 22+，无 npm 依赖 |
 | [dashscope-tts](skills/dashscope-tts/SKILL.md) | 百炼非流式语音合成与补下载 | Node.js 22+，无 npm 依赖 |
 | [qiniu](skills/qiniu/SKILL.md) | 本地文件上传七牛并返回访问 URL | Node.js 22+，真实上传需官方 qiniu SDK |
 | [exe-dev](skills/exe-dev/SKILL.md) | exe.dev 部署排障、权限、集成与计费咨询 | 文档型；实际操作需账户、SSH 与授权 |
@@ -82,7 +82,7 @@ pippit-tool-cli status
 | --- | --- |
 | fal.ai | `FAL_KEY` |
 | 火山方舟 | `ARK_API_KEY` |
-| 豆包语音识别 | `VOLCENGINE_SPEECH_API_KEY`，或旧版 `VOLCENGINE_SPEECH_APP_ID` + `VOLCENGINE_SPEECH_ACCESS_TOKEN` |
+| 豆包语音识别／合成 | `VOLCENGINE_SPEECH_API_KEY`，或旧版 `VOLCENGINE_SPEECH_APP_ID` + `VOLCENGINE_SPEECH_ACCESS_TOKEN`；分别需要对应服务权限 |
 | 百炼 | `DASHSCOPE_API_KEY` |
 | 七牛 | `QINIU_ACCESS_KEY`、`QINIU_SECRET_KEY`、`QINIU_BUCKET`、`QINIU_DOMAIN`，上传时四项齐全；域名须为 HTTPS |
 | ElevenLabs（第三方三个音频技能） | `ELEVENLABS_API_KEY` |

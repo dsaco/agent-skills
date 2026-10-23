@@ -26,7 +26,7 @@ macOS / Node.js 24.14.0：仓库 `npm test` 对应的离线测试 **57 项通过
 | strudel-music | 参数、预检分析、联网前拒绝路径、计时、WAV 校验（含削波）、双循环截取与中文空格目录为离线测试；另在 strudel.cc 实测预检与渲染，听感与采样许可未验收；详见[验证与许可](strudel-music.md) |
 | qiniu | 四项环境变量、命名与 URL、SDK 替身上传、安全输出和独立目录运行；详见[来源与验证](qiniu.md) |
 | fal-ai | 参数、任务恢复、下载与凭据边界、独立目录运行；详见[来源与验证](fal-ai.md) |
-| volcengine-ark-media | Seedance 2.0／2.5 参数与 MOV 下载、提交保护、任务状态、图片恢复和独立运行；详见[来源与验证](volcengine-ark-media.md) |
+| volcengine-ark-media | Seedance 2.0／2.5、图片恢复、录音识别与语音合成 2.0；语音增量的 Windows 离线验证及真实调用边界详见[来源与验证](volcengine-ark-media.md) |
 | dashscope-tts | A/B 参数隔离、非流式合成、提交留据、补下载和错误处理；详见[来源与验证](dashscope-tts.md) |
 
 技能分支与完成条件的静态检查见[流程走查](skill-process-review.md)，不等同于独立模型行为评测。
