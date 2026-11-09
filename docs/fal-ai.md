@@ -1,6 +1,6 @@
 # fal-ai 来源与验证
 
-## 已确认的范围
+## 导入时的范围
 
 用户选择以 ai-pi 图片完整版为基础，采用 MIT，在独立仓库维护。暂不加入全局版视频，不修改原副本或消费者。本仓库不包含 GitHub 下载器、签名目录、Release 自动化或任何 VM 服务。
 
@@ -37,3 +37,18 @@
 ## 流程精简
 
 按 writing-great-skills 精简 description 的同义表述，保留模型调用入口；新任务预检增加“仅预览后结束”，最终完成条件引用 jobs 的验收与交付规则，避免重复定义。脚本与模型参数不变。跨技能静态用例见[流程走查](skill-process-review.md)；未执行模型行为对照测试。
+
+## 通用生成版
+
+入口改为 `search`、`schema`、`submit` 及 `status/wait/result/download/cancel`。直接调用官方 Model Catalog、Queue 与 CDN，不依赖 MCP；删除固定模型表、专用图片命令与相关参数文档，任务记录使用 version=2。历史导入校验与测试记录描述旧基线，不代表当前接口。
+
+- 生成时动态取 OpenAPI，保留用户输入字段、值和素材顺序，新增标准队列模型无需改代码。
+- 本地 `$file` 标记支持任意嵌套输入字段；输出按 schema／响应中的文件对象或显式 JSON Pointer 获取，支持非图片媒体和原始 JSON。
+- 常用 schema 预检及未覆盖断言提示、单次提交留据、部分下载、凭据边界和独立目录运行由离线测试覆盖。
+- 模型发现与公开 schema 可独立验证；没有执行真实素材上传或付费生成。实时／流式协议、全部模型、账户权限、实际媒体品质、Node.js 22 与 Windows 仍未验收。
+
+### 当前验证
+
+2026-11-06，macOS：fal 通用生成测试与仓库结构／独立复制检查在 Node.js 20.17.0 和 24.22.1 均为 20 项通过；全仓 `npm test` 使用 Node.js 20.17.0、工作目录作为 TMPDIR 时 61 项通过。运行环境声明仍以 Node.js 22+ 为基线。默认 macOS 临时路径中的 `private` 会触发未修改的 Ark 测试字符串断言，不是 fal 行为失败。
+
+只读联网验证了目录搜索，以及 GPT Image 2.6 Flare 编辑、Minimax H3 Max 视频、ElevenLabs v3 语音、Hunyuan 3D v3.1 的实时 schema 和输入预检。视频缺少必填参数时被预检拒绝，补齐后通过；3D schema 的扩展约束如 max_file_size 被明确标记为未自动校验。上述验证没有上传素材或提交付费生成，不证明实际出片能力。

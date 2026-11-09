@@ -6,8 +6,8 @@
 
 | 能力 | 来源依赖 | 新仓库现状 |
 | --- | --- | --- |
-| Flare 文生图／编辑 | `text-to-image.js`、`image-to-image.js`，旧 `image-generation.md` | [fal 图片说明](../../skills/fal-ai/references/images.md)支持相应模型，但统一使用 `scripts/fal.mjs`；需要适配命令、参数与结果结构 |
-| 逐帧去背景 | `remove-background.js`，输出文件和 JSON 字段的旧约定 | [fal 去背景说明](../../skills/fal-ai/references/background.md)包含 Ideogram，但入口与[任务恢复协议](../../skills/fal-ai/references/jobs.md)不同 |
+| Flare 文生图／编辑 | `text-to-image.js`、`image-to-image.js`，旧 `image-generation.md` | [fal 通用生成](../../skills/fal-ai/references/generation.md)动态读取模型 schema，使用 `scripts/fal.mjs submit`；需要适配 JSON 输入与结果结构 |
+| 逐帧去背景 | `remove-background.js`，输出文件和 JSON 字段的旧约定 | [fal 通用生成](../../skills/fal-ai/references/generation.md)可查找去背景端点并读取 schema；需要适配输入及[任务恢复协议](../../skills/fal-ai/references/jobs.md) |
 | 图生视频 | `image-to-video.js`，旧模型别名与任务处理 | 新 fal 是图片版，没有此入口；保留旧能力、补支持或更换服务需单独决定，不能静默降级 |
 | 本地加工 | Node + ImageMagick、ffmpeg／ffprobe；可选 Python／Pillow | 本资料未迁入脚本或安装依赖，不能把源码存在当新仓库已经可用 |
 
