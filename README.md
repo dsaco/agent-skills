@@ -12,6 +12,7 @@ dsaco 个人维护的 [Agent Skills 集合](https://github.com/dsaco/agent-skill
 | [qiniu](skills/qiniu/SKILL.md) | 本地文件上传七牛并返回访问 URL | Node.js 22+，真实上传需官方 qiniu SDK |
 | [exe-dev](skills/exe-dev/SKILL.md) | exe.dev 部署排障、权限、集成与计费咨询 | 文档型；实际操作需账户、SSH 与授权 |
 | [strudel-music](skills/strudel-music/SKILL.md) | Strudel 编曲、离线渲染 WAV，预检与音频校验 | Node.js 22+、Playwright 与本机 Chrome、Python 3；需访问 strudel.cc |
+| [minimax](skills/minimax/SKILL.md) | H3 视频与参考语音、TTS、音色设计／克隆、图片、音乐及任务恢复 | Node.js 24+，无 npm 依赖；本地参考素材需 FFprobe；音乐 API 限历史付费账户 |
 
 参数、依赖和能力边界见各技能的 `SKILL.md` 与 `README.md`。
 
@@ -84,6 +85,7 @@ pippit-tool-cli status
 | 火山方舟 | `ARK_API_KEY` |
 | 豆包语音识别／合成 | `VOLCENGINE_SPEECH_API_KEY`，或旧版 `VOLCENGINE_SPEECH_APP_ID` + `VOLCENGINE_SPEECH_ACCESS_TOKEN`；分别需要对应服务权限 |
 | 百炼 | `DASHSCOPE_API_KEY` |
+| MiniMax | `MINIMAX_API_KEY`（按量计费）；可选 `MINIMAX_REGION`、`MINIMAX_API_HOST`、`MINIMAX_FFPROBE` |
 | 七牛 | `QINIU_ACCESS_KEY`、`QINIU_SECRET_KEY`、`QINIU_BUCKET`、`QINIU_DOMAIN`，上传时四项齐全；域名须为 HTTPS |
 | ElevenLabs（第三方三个音频技能） | `ELEVENLABS_API_KEY` |
 | 小云雀（第三方三个创作技能） | 默认使用 CLI 浏览器登录；自动化环境可选 `XYQ_ACCESS_KEY`，优先于网页登录 |

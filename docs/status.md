@@ -31,6 +31,17 @@ macOS / Node.js 24.14.0：仓库 `npm test` 对应的离线测试 **57 项通过
 
 技能分支与完成条件的静态检查见[流程走查](skill-process-review.md)，不等同于独立模型行为评测。
 
+## MiniMax 增量验证
+
+2026-10-24新增独立[minimax](../skills/minimax/SKILL.md)，直接调用官方HTTP接口，使用Node.js 24+原生TypeScript、fetch与文件API，不依赖其他Skill或npm包。
+
+- Windows / Node.js 24.7.0：脚本语法检查通过；使用已有TypeScript 4.9.5及现有Node类型定义完成strict、noEmit检查（skipLibCheck，仅跳过第三方声明检查）。
+- H3 768P参考图＋语音、TTS、音色设计、克隆、音色列表、图片、音乐的dryRun入口均实际执行；没有联网提交或写入任务产物。
+- 本地WAV经FFprobe读取并转换为H3参考输入通过；短于10秒的克隆源、Lite的2K请求、固定首帧混用参考音频均被拒绝。int64文件ID以字符串保留，并可序列化为精确请求整数。
+- 官方接口文档已核对；音乐入口标明仅历史付费账户可用。语音试听不自动代表选定音色，下载成功不代表创意质量验收。
+- Skill Creator自带quick_validate因现有Python缺少PyYAML未运行完成，未为校验另装依赖；入口frontmatter、文件引用及未完成占位已人工核对。
+- 尚未验证：真实账户权限、费用、上传／云端生成／查询／下载全链路、恢复时的真实网络异常、Mac/Linux及宿主自动发现。当前进程未配置MiniMax Key，未调用付费API。没有新增测试模块或修改其他技能。
+
 ## 仅文档收录
 
 [资料索引](README.md)收录[小程序运维](wechat-miniprogram-ops/README.md)和 [HubKKK](hubkkk/README.md)。仅静态审阅原知识与脚本后整理成文档，来源文件摘要见各目录 `sources.json`；不新增 Skill、执行脚本、运行环境变量或安装入口。
