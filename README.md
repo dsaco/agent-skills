@@ -6,7 +6,7 @@ dsaco 个人维护的 [Agent Skills 集合](https://github.com/dsaco/agent-skill
 
 | Skill | 能力 | 要求 |
 | --- | --- | --- |
-| [fal-ai](skills/fal-ai/SKILL.md) | 图片生成、编辑、去背景、深度／姿态提取及任务恢复 | Node.js 22+，无 npm 依赖 |
+| [fal-ai](skills/fal-ai/SKILL.md) | 动态模型发现与 schema、通用媒体生成／编辑及任务取回（无 MCP） | Node.js 22+，无 npm 依赖 |
 | [volcengine-ark-media](skills/volcengine-ark-media/SKILL.md) | Seedream 图片、Seedance 2.0／2.5 视频及补下载、豆包录音转写与字幕导出 | Node.js 22+，无 npm 依赖 |
 | [dashscope-tts](skills/dashscope-tts/SKILL.md) | 百炼非流式语音合成与补下载 | Node.js 22+，无 npm 依赖 |
 | [qiniu](skills/qiniu/SKILL.md) | 本地文件上传七牛并返回访问 URL | Node.js 22+，真实上传需官方 qiniu SDK |

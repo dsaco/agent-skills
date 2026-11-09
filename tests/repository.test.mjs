@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { readFile, readdir, lstat, symlink, mkdtemp, mkdir, copyFile, rm } from 'node:fs/promises';
+import { readFile, writeFile, readdir, lstat, symlink, mkdtemp, mkdir, copyFile, rm } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import os from 'node:os';
@@ -10,9 +10,8 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const skill = path.join(root, 'skills/fal-ai');
 const expected = [
   'LICENSE', 'README.md', 'SKILL.md',
-  'references/background.md', 'references/consultation.md', 'references/images.md',
-  'references/jobs.md', 'references/structure.md',
-  'scripts/errors.mjs', 'scripts/fal.mjs', 'scripts/models.mjs', 'tests/fal.test.mjs',
+  'references/consultation.md', 'references/generation.md', 'references/jobs.md',
+  'scripts/errors.mjs', 'scripts/fal.mjs', 'scripts/client.mjs', 'scripts/schema.mjs', 'tests/fal.test.mjs',
 ].sort();
 async function files(dir, base = dir) {
   const result = [];
@@ -58,24 +57,24 @@ test('移动到含空格与中文的新目录后独立 CLI 可用，无 Key／�
     const cli = path.join(installed, 'scripts/fal.mjs');
     const run = args => spawnSync(process.execPath, [cli, ...args], { cwd, env, encoding: 'utf8', timeout: 10000 });
     const help = run(['--help']);
-    assert.equal(help.status, 0); assert.match(help.stdout, /text-to-image/);
-    // Directory aliases occur naturally on macOS; exercise an explicit alias too.
+    assert.equal(help.status, 0); assert.match(help.stdout, /submit --endpoint/);
+    const endpoint = 'fixture/unregistered-model';
+    const schema = { version: 1, endpoint, inputSchema: { type: 'object', required: ['prompt'], properties: { prompt: { type: 'string' } } }, outputSchema: { type: 'object' }, openapi: {} };
+    await writeFile(path.join(cwd, 'schema.json'), JSON.stringify(schema));
+    await writeFile(path.join(cwd, 'input.json'), JSON.stringify({ prompt: '本地预检' }));
+    const args = ['submit', '--endpoint', endpoint, '--input', 'input.json', '--schema', 'schema.json', '--dry-run'];
+    const result = run(args);
+    assert.equal(result.status, 0, result.stderr);
+    const data = JSON.parse(result.stdout);
+    assert.equal(data.endpoint, endpoint); assert.equal(data.dryRun, true); assert.equal(data.remoteMediaValidated, false);
+    // Explicit alias exercises realpath dispatch on all hosts that support it.
     const alias = path.join(tmp, 'alias');
     await symlink(installed, alias, process.platform === 'win32' ? 'junction' : 'dir');
-    const aliased = spawnSync(process.execPath, [path.join(alias, 'scripts/fal.mjs'), 'text-to-image', '--prompt', 'alias', '--dry-run'], { cwd, env, encoding: 'utf8', timeout: 10000 });
+    const aliased = spawnSync(process.execPath, [path.join(alias, 'scripts/fal.mjs'), ...args], { cwd, env, encoding: 'utf8', timeout: 10000 });
     assert.equal(aliased.status, 0, aliased.stderr); assert.equal(JSON.parse(aliased.stdout).dryRun, true);
-    for (const task of ['text-to-image', 'image-to-image', 'remove-background', 'image-to-depth', 'image-to-pose']) {
-      const args = [task];
-      if (task.includes('to-image')) args.push('--prompt', '本地预检');
-      if (task !== 'text-to-image') args.push('--image', 'https://never-fetch.invalid/input.png');
-      const result = run([...args, '--dry-run']);
-      assert.equal(result.status, 0, result.stderr);
-      const data = JSON.parse(result.stdout);
-      assert.equal(data.task, task); assert.equal(data.dryRun, true); assert.equal(data.remoteMediaValidated, false);
-    }
-    const missing = run(['text-to-image', '--prompt', '不应提交']);
+    const missing = run(['submit', '--endpoint', endpoint, '--input', 'input.json']);
     assert.equal(missing.status, 1); assert.match(missing.stderr, /FAL_KEY/);
-    assert.deepEqual(await readdir(cwd), []);
+    assert.deepEqual((await readdir(cwd)).sort(), ['input.json', 'schema.json']);
     assert.deepEqual(await files(installed), expected.filter(x => x !== 'tests/fal.test.mjs'));
   } finally { await rm(tmp, { recursive: true, force: true }); }
 });
