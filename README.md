@@ -75,6 +75,12 @@ pippit-tool-cli status
 
 已有可用版本时直接复用；安装／更新会写入全局技能目录，可能覆盖本地修改，执行前先核对现有副本。三个技能共用登录授权，普通使用无需手填 Key；自动化环境可选 `XYQ_ACCESS_KEY`，它优先于网页登录，无效时不会自动回退。个人／团队空间沿用用户指定或已保存的选择，登录成功不代表所选空间有会员、积分或模型权限。
 
+### Token01 视频
+
+第三方技能 `tk01-video-gen`：通过 Token01 API 文生视频、使用参考素材生成视频、查询任务及下载 MP4。上游[安装文档](https://token01.apifox.cn/doc-9617444)提供 [v1.0.2 ZIP](https://files.token01.net/public/tk01-video-gen-v1.0.2.zip)；安装／更新时下载文档列出的版本，将完整 `tk01-video-gen/` 目录放入宿主技能目录，更新前先检查已有副本。入口为 `skills/tk01-video-gen/SKILL.md`。
+
+依赖 Python 3 标准库。认证读取 `TK01_API_KEY` 或用户目录下 `.tk01-video-gen/api_key.txt`，不自动加载本仓库 `.env`；可选 `TK01_BASE_URL`，默认 `https://token01.net`。安装包未附 LICENSE，第三方源码保持 Git 忽略；不按本仓库 MIT 许可再分发。安装不代表模型权限或真实生成已验证。
+
 ## 环境变量
 
 按 [.env.example](.env.example) 在本地 `.env` 或启动环境中配置实际使用的服务；已有 `.env` 时仅补充所需条目。`.env` **只在本机保存，被 Git 忽略，不随仓库同步**。变量清单：
@@ -89,6 +95,7 @@ pippit-tool-cli status
 | 七牛 | `QINIU_ACCESS_KEY`、`QINIU_SECRET_KEY`、`QINIU_BUCKET`、`QINIU_DOMAIN`，上传时四项齐全；域名须为 HTTPS |
 | ElevenLabs（第三方三个音频技能） | `ELEVENLABS_API_KEY` |
 | 小云雀（第三方三个创作技能） | 默认使用 CLI 浏览器登录；自动化环境可选 `XYQ_ACCESS_KEY`，优先于网页登录 |
+| Token01（第三方 `tk01-video-gen`） | `TK01_API_KEY` 或用户目录下 `.tk01-video-gen/api_key.txt`；可选 `TK01_BASE_URL` |
 
 exe-dev 使用已有 SSH 认证，无固定环境变量。其余第三方技能的认证按上游说明，不预设通用 Key。
 
