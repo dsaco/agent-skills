@@ -2,7 +2,9 @@
 
 dsaco 个人维护的 [Agent Skills 集合](https://github.com/dsaco/agent-skills)。自维护源码位于 `skills/<name>/`，可独立安装，也可在本地直接开发使用；不绑定特定 Agent 客户端，非服务商官方项目。
 
-## 自维护 Skill
+本清单收录 16 个技能，其中 6 个随仓库分发，10 个单独安装或维护。
+
+## 随仓库分发的技能（6 个）
 
 | Skill | 能力 | 要求 |
 | --- | --- | --- |
@@ -11,7 +13,6 @@ dsaco 个人维护的 [Agent Skills 集合](https://github.com/dsaco/agent-skill
 | [dashscope-tts](skills/dashscope-tts/SKILL.md) | 百炼非流式语音合成与补下载 | Node.js 22+，无 npm 依赖 |
 | [qiniu](skills/qiniu/SKILL.md) | 本地文件上传七牛并返回访问 URL | Node.js 22+，真实上传需官方 qiniu SDK |
 | [exe-dev](skills/exe-dev/SKILL.md) | exe.dev 部署排障、权限、集成与计费咨询 | 文档型；实际操作需账户、SSH 与授权 |
-| [strudel-music](skills/strudel-music/SKILL.md) | Strudel 编曲、离线渲染 WAV，预检与音频校验 | Node.js 22+、Playwright 与本机 Chrome、Python 3；需访问 strudel.cc |
 | [minimax](skills/minimax/SKILL.md) | H3 视频与参考语音、TTS、音色设计／克隆、图片、音乐及任务恢复 | Node.js 24+，无 npm 依赖；本地参考素材需 FFprobe；音乐 API 限历史付费账户 |
 
 参数、依赖和能力边界见各技能的 `SKILL.md` 与 `README.md`。
@@ -27,31 +28,54 @@ npx skills add dsaco/agent-skills --skill volcengine-ark-media
 npx skills add dsaco/agent-skills --skill dashscope-tts
 npx skills add dsaco/agent-skills --skill qiniu
 npx skills add dsaco/agent-skills --skill exe-dev
-npx skills add dsaco/agent-skills --skill strudel-music
 ```
 
 本地安装可用 `npx skills add "<本地仓库路径>/skills/<name>"`。也可克隆／下载源码，将完整技能目录放入宿主支持的位置，保留 `SKILL.md`、references、脚本及依赖声明（若有）、LICENSE。安装器的本地路径模式会产生安装副本，不是持续链接开发源码。
 
-## 第三方 Skill
+## 单独安装或维护的技能（10 个）
+
+以下目录位于本机 `skills/` 下，由 Git 忽略。这些技能需在各台电脑上单独配置。
+
+| 用途 | 技能 |
+| --- | --- |
+| 浏览器与视频下载 | `browser-skill` 复用已登录的浏览器。`cat-catch-video` 调用它下载网页视频。`playwright-cli` 自动操作和测试网页。 |
+| 网页设计 | `design-taste-frontend` 用于新建、改版和评审网站。`hallmark` 用于新页面设计，也支持显式指定的改版。 |
+| 视频与音效 | `tk01-video-gen` 通过 Token01 生成视频。`sound-effects` 通过 ElevenLabs 生成音效。 |
+| 技能与指令维护 | `find-skills` 查找和安装技能。`anthropic-skill-creator` 创建、改进和评测技能。`writing-for-agents` 编写面向 Agent 的说明。 |
+
+### 第三方安装入口
 
 直接从上游安装，安装副本不纳入 Git。本仓库的 `skills/` 采用自维护目录白名单，以下第三方技能都保持忽略。下面是用户级命令；项目级去掉 `-g`。**`-g` 写入实际用户级技能目录，不是当前工作目录。** 安装后核对实际目录，同一宿主只保留一份加载中的副本；清理旧副本前先比较内容和依赖。
 
 新增或调整第三方技能时，在本节登记技能名称、用途、上游来源、安装／更新入口和认证方式；需要环境变量的，同时维护下方配置清单与 `.env.example`。登记不将第三方源码或登录状态加入本仓库。
 
 ```sh
-npx skills add tencentcloudbase/cloudbase-skills --skill cloudbase -g
 npx skills add vercel-labs/skills --skill find-skills -g
-npx skills add elevenlabs/skills --skill music -g
 npx skills add microsoft/playwright-cli --skill playwright-cli -g
 npx skills add anthropics/skills --skill skill-creator -g
 npx skills add elevenlabs/skills --skill sound-effects -g
-npx skills add elevenlabs/skills --skill text-to-speech -g
 npx skills add mattpocock/skills --skill writing-for-agents -g
 ```
 
-`writing-great-skills` 当前上游名为 [`writing-for-agents`](https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents)，旧副本不会自动更名。各电脑分别安装；依赖、许可和权限以上游为准，包括 CloudBase 账户／环境、Playwright CLI／浏览器及 ElevenLabs SDK。
+`writing-great-skills` 当前上游名为 [`writing-for-agents`](https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents)，旧副本不会自动更名。各电脑分别安装；依赖、许可和权限以上游为准，包括 Playwright CLI／浏览器及 ElevenLabs SDK。
+
+本机目录 `anthropic-skill-creator` 对应上游安装名 `skill-creator`。两个网页设计技能分别来自 [Taste Skill](https://github.com/Leonxlnx/taste-skill) 和 [Hallmark](https://github.com/Nutlope/hallmark)。
 
 [BrowserSkill](https://github.com/Tencent/BrowserSkill)：通过 `bsk` CLI 和 Chrome／Edge 扩展复用浏览器登录，支持 macOS／Windows／Linux；安装见[官方指南](https://github.com/Tencent/BrowserSkill/blob/main/AGENT_INSTALL.md)。
+
+### Token01 视频
+
+第三方技能 `tk01-video-gen`：通过 Token01 API 文生视频、使用参考素材生成视频、查询任务及下载 MP4。上游[安装文档](https://token01.apifox.cn/doc-9617444)提供 [v1.0.2 ZIP](https://files.token01.net/public/tk01-video-gen-v1.0.2.zip)；安装／更新时下载文档列出的版本，将完整 `tk01-video-gen/` 目录放入宿主技能目录，更新前先检查已有副本。入口为 `skills/tk01-video-gen/SKILL.md`。
+
+依赖 Python 3 标准库。认证读取 `TK01_API_KEY` 或用户目录下 `.tk01-video-gen/api_key.txt`，不自动加载本仓库 `.env`；可选 `TK01_BASE_URL`，默认 `https://token01.net`。安装包未附 LICENSE，第三方源码保持 Git 忽略；不按本仓库 MIT 许可再分发。安装不代表模型权限或真实生成已验证。
+
+## 可选安装参考
+
+CloudBase 和小云雀列为可选安装项。CloudBase 可通过以下命令安装。
+
+```sh
+npx skills add tencentcloudbase/cloudbase-skills --skill cloudbase -g
+```
 
 ### 小云雀
 
@@ -75,12 +99,6 @@ pippit-tool-cli status
 
 已有可用版本时直接复用；安装／更新会写入全局技能目录，可能覆盖本地修改，执行前先核对现有副本。三个技能共用登录授权，普通使用无需手填 Key；自动化环境可选 `XYQ_ACCESS_KEY`，它优先于网页登录，无效时不会自动回退。个人／团队空间沿用用户指定或已保存的选择，登录成功不代表所选空间有会员、积分或模型权限。
 
-### Token01 视频
-
-第三方技能 `tk01-video-gen`：通过 Token01 API 文生视频、使用参考素材生成视频、查询任务及下载 MP4。上游[安装文档](https://token01.apifox.cn/doc-9617444)提供 [v1.0.2 ZIP](https://files.token01.net/public/tk01-video-gen-v1.0.2.zip)；安装／更新时下载文档列出的版本，将完整 `tk01-video-gen/` 目录放入宿主技能目录，更新前先检查已有副本。入口为 `skills/tk01-video-gen/SKILL.md`。
-
-依赖 Python 3 标准库。认证读取 `TK01_API_KEY` 或用户目录下 `.tk01-video-gen/api_key.txt`，不自动加载本仓库 `.env`；可选 `TK01_BASE_URL`，默认 `https://token01.net`。安装包未附 LICENSE，第三方源码保持 Git 忽略；不按本仓库 MIT 许可再分发。安装不代表模型权限或真实生成已验证。
-
 ## 环境变量
 
 按 [.env.example](.env.example) 在本地 `.env` 或启动环境中配置实际使用的服务；已有 `.env` 时仅补充所需条目。`.env` **只在本机保存，被 Git 忽略，不随仓库同步**。变量清单：
@@ -93,8 +111,8 @@ pippit-tool-cli status
 | 百炼 | `DASHSCOPE_API_KEY` |
 | MiniMax | `MINIMAX_API_KEY`（按量计费）；可选 `MINIMAX_REGION`、`MINIMAX_API_HOST`、`MINIMAX_FFPROBE` |
 | 七牛 | `QINIU_ACCESS_KEY`、`QINIU_SECRET_KEY`、`QINIU_BUCKET`、`QINIU_DOMAIN`，上传时四项齐全；域名须为 HTTPS |
-| ElevenLabs（第三方三个音频技能） | `ELEVENLABS_API_KEY` |
-| 小云雀（第三方三个创作技能） | 默认使用 CLI 浏览器登录；自动化环境可选 `XYQ_ACCESS_KEY`，优先于网页登录 |
+| ElevenLabs（`sound-effects`） | `ELEVENLABS_API_KEY` |
+| 小云雀（可选安装） | 默认使用 CLI 浏览器登录；自动化环境可选 `XYQ_ACCESS_KEY`，优先于网页登录 |
 | Token01（第三方 `tk01-video-gen`） | `TK01_API_KEY` 或用户目录下 `.tk01-video-gen/api_key.txt`；可选 `TK01_BASE_URL` |
 
 exe-dev 使用已有 SSH 认证，无固定环境变量。其余第三方技能的认证按上游说明，不预设通用 Key。
