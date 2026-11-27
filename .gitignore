@@ -22,6 +22,7 @@
 !/skills/qiniu/
 !/skills/exe-dev/
 !/skills/minimax/
+!/skills/gpt-image/
 
 # 凭据与机器配置：即使位于已放行目录也不得入库。
 .env

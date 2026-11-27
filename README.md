@@ -2,12 +2,13 @@
 
 dsaco 个人维护的 [Agent Skills 集合](https://github.com/dsaco/agent-skills)。自维护源码位于 `skills/<name>/`，可独立安装，也可在本地直接开发使用；不绑定特定 Agent 客户端，非服务商官方项目。
 
-本清单收录 16 个技能，其中 6 个随仓库分发，10 个单独安装或维护。
+本清单收录 17 个技能，其中 7 个随仓库分发，10 个单独安装或维护。
 
-## 随仓库分发的技能（6 个）
+## 随仓库分发的技能（7 个）
 
 | Skill | 能力 | 要求 |
 | --- | --- | --- |
+| [gpt-image](skills/gpt-image/SKILL.md) | 通过 sub2api 生成 GPT Image 图片或编辑参考图 | Python 3.8+ 标准库 |
 | [fal-ai](skills/fal-ai/SKILL.md) | 动态模型发现与 schema、通用媒体生成／编辑及任务取回（无 MCP） | Node.js 22+，无 npm 依赖 |
 | [volcengine-ark-media](skills/volcengine-ark-media/SKILL.md) | Seedream 图片、Seedance 2.0／2.5 视频及补下载、豆包录音转写／字幕导出与语音合成 2.0 配音 | Node.js 22+，无 npm 依赖 |
 | [dashscope-tts](skills/dashscope-tts/SKILL.md) | 百炼非流式语音合成与补下载 | Node.js 22+，无 npm 依赖 |
@@ -105,6 +106,7 @@ pippit-tool-cli status
 
 | 服务 | 配置项 |
 | --- | --- |
+| sub2api 生图 | `SUB2API_BASE_URL`、`SUB2API_API_KEY` |
 | fal.ai | `FAL_KEY` |
 | 火山方舟 | `ARK_API_KEY` |
 | 豆包语音识别／合成 | `VOLCENGINE_SPEECH_API_KEY`，或旧版 `VOLCENGINE_SPEECH_APP_ID` + `VOLCENGINE_SPEECH_ACCESS_TOKEN`；分别需要对应服务权限 |
